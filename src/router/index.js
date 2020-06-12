@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
   {
     path: '/',
-    name: 'Dashboard',
-    component: () => import('../views/Home.vue')
+    name: 'Hosts',
+    component: () => import('../views/Hosts.vue')
   },
   {
     path: '/groups',
