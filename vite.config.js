@@ -1,11 +1,11 @@
 module.exports = {
   outDir: '../app/static',
-  proxy: {
+/*   proxy: {
     // with options
     '/api': {
-      target: 'http://localhost:8000',
+      target: 'http://localhost:8000/api',
       changeOrigin: true,
       rewrite: path => path.replace(/^\/api/, '')
     }
-  }
+  } */
 }

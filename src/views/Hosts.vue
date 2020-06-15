@@ -1,28 +1,22 @@
 <script>
-import { onMounted } from 'vue'
+import { onMounted, ref } from "vue";
 
 export default {
   name: "Hosts",
-  setup() {
-    onMounted(() => {
-      console.log('on mounted')
-      fetch('/api/host/create',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            name: 'shshshshshsh'
-          })
-        }
-      ).then(response => {
-        console.log(response)
-      }).catch(err => {
-        console.log(err)
-      })
-    })
-
-    return {}
+  async setup() {
+    const dataa = ref([{ a: "b" }, { a: "c" }]);
+    const res = await fetch("http://localhost:8000/api/host/get_multi", {
+      method: "GET"
+    });
+    const a = await res.json()
+    console.log(a.data);
+    const b = a.data
+    return {
+      dataa,
+      b
+    };
   }
-}
+};
 </script>
 
 <template>
@@ -39,9 +33,9 @@ export default {
                   <th>IP</th>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>ahahaha</td>
-                    <td>192.168.127.10</td>
+                  <tr v-for="(item, i) in b">
+                    <td>{{ item.hostname }}</td>
+                    <td>{{ item._id['$oid'] }}</td>
                   </tr>
                 </tbody>
               </table>
