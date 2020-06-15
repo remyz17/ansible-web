@@ -4,21 +4,21 @@ const routes = [
   {
     path: '/',
     name: 'Hosts',
-    component: () => import('../views/Hosts.vue')
+    component: () => import('/@/views/Hosts.vue')
   },
   {
     path: '/groups',
     name: 'Groups',
-    component: () => import('../views/Groups.vue')
+    component: () => import('/@/views/Groups.vue')
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import( '../views/About.vue')
+    component: () => import( '/@/views/About.vue')
   },
   {
     path: '/:catchAll(.*)',
-    component: () => import('../views/404.vue')
+    component: () => import('/@/views/404.vue')
   }
 ]
 
