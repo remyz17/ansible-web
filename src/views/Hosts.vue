@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 export default {
   name: "Hosts",
   async setup() {
-    const dataa = ref([{ a: "b" }, { a: "c" }]);
+    /* const dataa = ref([{ a: "b" }, { a: "c" }]);
     const res = await fetch("http://localhost:8000/api/host/get_multi", {
       method: "GET"
     });
@@ -14,7 +14,7 @@ export default {
     return {
       dataa,
       b
-    };
+    }; */
   }
 };
 </script>
@@ -25,7 +25,7 @@ export default {
       <div class="tile is-parent">
         <div class="tile is-child box">
           <p class="title">Hosts</p>
-          <div class="columns">
+          <!-- <div class="columns">
             <div class="column">
               <table class="table is-hoverable">
                 <thead>
@@ -40,7 +40,7 @@ export default {
                 </tbody>
               </table>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

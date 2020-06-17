@@ -20,9 +20,9 @@ export default {
 <template>
 <nav class="navbar is-spaced is-fixed-top" role="navigation" aria-label="dropdown navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
-    </a>
+    <div class="navbar-item">
+      <h1>ANSIBLE web</h1>
+    </div>
     <div class="navbar-burger burger" @click="toggleBurger">
       <span></span>
       <span></span>
@@ -31,7 +31,7 @@ export default {
   </div>
 
   <div class="navbar-menu" :class="[menuOpen ? 'is-active' : '']">
-    <div class="navbar-start">
+    <div class="navbar-end">
       <router-link class="navbar-item" to="/">
         Hosts
       </router-link>
