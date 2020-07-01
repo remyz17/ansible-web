@@ -1,42 +1,64 @@
 <template>
   <section class="section">
-    <div class="box">
-      <article class="media">
-        <div class="media-left">
-          <figure class="image is-64x64">
-            <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image" />
-          </figure>
-        </div>
-        <div class="media-content">
-          <div class="content">
-            <p>
-              <strong>John Smith</strong>
-              <small>@johnsmith</small>
-              <small>31m</small>
-              <br />Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
-            </p>
-          </div>
-          <nav class="level is-mobile">
-            <div class="level-left">
-              <a class="level-item" aria-label="reply">
-                <span class="icon is-small">
-                  <i class="fas fa-reply" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a class="level-item" aria-label="retweet">
-                <span class="icon is-small">
-                  <i class="fas fa-retweet" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a class="level-item" aria-label="like">
-                <span class="icon is-small">
-                  <i class="fas fa-heart" aria-hidden="true"></i>
-                </span>
-              </a>
+    <div class="container">
+      <div class="columns is-multiline">
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-header-title is-inline">
+                <span>Income</span>
+                <span class="tag is-success is-pulled-right">Monthly</span>
+              </h3>
             </div>
-          </nav>
+            <div class="card-content">
+              <h3 class="title">108,200</h3>
+              <p>Total income</p>
+            </div>
+          </div>
         </div>
-      </article>
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-header-title is-inline">
+                <span>Orders</span>
+                <span class="tag is-success is-pulled-right">Monthly</span>
+              </h3>
+            </div>
+            <div class="card-content">
+              <h3 class="title">128,430</h3>
+              <p>New orders</p>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-header-title is-inline">
+                <span>Visits</span>
+                <span class="tag is-success is-pulled-right">Today</span>
+              </h3>
+            </div>
+            <div class="card-content">
+              <h3 class="title">81,248</h3>
+              <p>New visits</p>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-header-title is-inline">
+                <span>User activity</span>
+                <span class="tag is-danger is-pulled-right">Today</span>
+              </h3>
+            </div>
+            <div class="card-content">
+              <h3 class="title">2,341</h3>
+              <p>Used app more than once</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>

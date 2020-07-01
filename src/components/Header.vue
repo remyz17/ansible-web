@@ -18,7 +18,7 @@ export default {
 </script>
 
 <template>
-<nav class="navbar is-spaced is-fixed-top" role="navigation" aria-label="dropdown navigation">
+<nav class="navbar is-spaced has-shadow" role="navigation" aria-label="dropdown navigation">
   <div class="navbar-brand">
     <div class="navbar-item">
       <h1>ANSIBLE web</h1>
