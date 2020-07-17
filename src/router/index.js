@@ -2,9 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   {
-    path: '/',
+    path: '/hosts',
     name: 'Hosts',
     component: () => import('/@/views/Hosts.vue')
+  },
+  {
+    path: '/host/:id',
+    name: 'HostItem',
+    component: () => import('/@/views/HostItem.vue')
   },
   {
     path: '/groups',

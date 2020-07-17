@@ -1,26 +1,13 @@
-<script>
-import { onMounted, ref } from "vue"
-import { Api } from '../servcies/api'
-
-export default {
-  name: "Hosts",
-  async setup() {
-    const api = new Api('host')
-    let res = false
-
-    onMounted(async () => {
-      console.log('ahaha')
-      res = await api.get_multi()
-      console.log(res)
-    })
-    return {
-      res
-    }
-  }
-}
-</script>
-
 <template>
+  <section class="section">
+    <nav class="breadcrumb is-centered is-medium" aria-label="breadcrumbs">
+      <ul>
+        <li class="is-active">
+          <a href="#">{{ $route.name }}</a>
+        </li>
+      </ul>
+    </nav>
+  </section>
   <section class="section">
     <div class="container">
       <div class="card">
@@ -33,21 +20,13 @@ export default {
               <thead>
                 <tr>
                   <th>Hostname</th>
-                  <th>Group</th>
+                  <th>Id</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>shshs</td>
-                  <td>shshs</td>
-                </tr>
-                <tr>
-                  <td>shshs</td>
-                  <td>shshs</td>
-                </tr>
-                <tr>
-                  <td>shshs</td>
-                  <td>shshs</td>
+                <tr v-for="r in res" :key="r.id" @click="onClick(r.id)">
+                  <td>{{ r.hostname }}</td>
+                  <td>{{ r.id }}</td>
                 </tr>
               </tbody>
             </table>
@@ -57,3 +36,31 @@ export default {
     </div>
   </section>
 </template>
+
+<script>
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Api } from '../servcies/api'
+
+export default {
+  name: 'Hosts',
+  async setup() {
+    const router = useRouter()
+    const api = new Api('host')
+    let res = ref([])
+
+    onMounted(async () => {
+      res.value = await api.get_multi()
+    })
+
+    return {
+      onClick: (id) => {
+        console.log('ahaha', id)
+        router.push(`/host/${id}`)
+      },
+      res
+    }
+    
+  }
+};
+</script>

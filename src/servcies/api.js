@@ -1,12 +1,12 @@
 class Api {
   constructor(baseUrl) {
-    this.baseUrl = `http://localhost:8000/api/${baseUrl}`
+    this.baseUrl = `/api/${baseUrl}`
   }
 
   async _fetch(url, method) {
     try {
       const payload = await fetch(
-        url,
+        `${this.baseUrl}` + url,
         {
           method: method
         }
@@ -22,7 +22,7 @@ class Api {
   async get_multi(limit=80) {
     try {
       const res = await this._fetch(
-        `${this.baseUrl}/get_multi`,
+        '/get_multi',
         'GET'
       )
       console.log(res)
@@ -34,7 +34,10 @@ class Api {
 
   async get(id) {
     try {
-      console.log('todo')
+      const res = await this._fetch(
+        '/get/' + id
+      )
+      return res
     } catch (err) {
       console.log('err', err)
     }
