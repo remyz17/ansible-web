@@ -35,13 +35,11 @@
 </style>
 
 <script>
-import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { ref } from 'vue'
 
 export default {
   name: 'Header',
   setup() {
-    const store = useStore()
     const menuOpen = ref(false)
     
     return {

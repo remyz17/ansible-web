@@ -4,12 +4,12 @@ const routes = [
   {
     path: '/hosts',
     name: 'Hosts',
-    component: () => import('/@/views/Hosts.vue')
+    component: () => import('/@/views/hosts/Hosts.vue')
   },
   {
     path: '/host/:id',
     name: 'HostItem',
-    component: () => import('/@/views/HostItem.vue')
+    component: () => import('/@/views/hosts/HostItem.vue')
   },
   {
     path: '/groups',

@@ -3,14 +3,25 @@ class Api {
     this.baseUrl = `/api/${baseUrl}`
   }
 
-  async _fetch(url, method) {
+  async _fetch(url, method, body=false) {
     try {
-      const payload = await fetch(
-        `${this.baseUrl}` + url,
-        {
-          method: method
-        }
-      )
+      let payload = null
+      if (!body) {
+        payload = await fetch(
+          this.baseUrl + url,
+          {
+            method: method
+          }
+        )
+      } else {
+        payload = await fetch(
+          this.baseUrl + url,
+          {
+            method: method,
+            body: JSON.stringify(body)
+          }
+        )
+      }
       const res = await payload.json()
       console.log(payload)
       return res
@@ -35,7 +46,8 @@ class Api {
   async get(id) {
     try {
       const res = await this._fetch(
-        '/get/' + id
+        `/get/${id}`,
+        'GET'
       )
       return res
     } catch (err) {
@@ -45,23 +57,37 @@ class Api {
 
   async create(payload) {
     try {
-      console.log('todo')
+      const res = await this._fetch(
+        '/create',
+        'POST',
+        payload
+      )
+      return res
     } catch (err) {
       console.log('err', err)
     }
   }
 
-  async update(payload) {
+  async update(id, payload) {
     try {
-      console.log('todo')
+      const res = await this._fetch(
+        `/update/${id}`,
+        'PUT',
+        payload
+      )
+      return res
     } catch (err) {
       console.log('err', err)
     }
   }
 
-  async delete(payload) {
+  async delete(id) {
     try {
-      console.log('todo')
+      const res = await this._fetch(
+        `/delete/${id}`,
+        'DELETE'
+      )
+      return res
     } catch (err) {
       console.log('err', err)
     }

@@ -15,13 +15,25 @@
     <div class="container">
       <div class="card">
         <header class="card-header">
-          <p class="card-header-title">Hosts Item</p>
+          <p class="card-header-title">Host: {{ hostData.hostname }}</p>
         </header>
         <div class="card-content">
           <div class="content">
-            <p>{{ hostData.hostname }}</p>
+            <div class="columns">
+              <div class="column">
+                <p><strong>ID:</strong> {{ hostData.id }}</p>
+                <p><strong>Hostname:</strong> {{ hostData.hostname }}</p>
+              </div>
+              <div class="column">
+                
+              </div>
+            </div>
           </div>
         </div>
+        <footer class="card-footer">
+          <a href="#" class="card-footer-item">Edit</a>
+          <a href="#" class="card-footer-item">Delete</a>
+      </footer>
       </div>
     </div>
   </section>
@@ -33,7 +45,7 @@ import {
   useRoute,
   useRouter 
 } from 'vue-router'
-import { Api } from '../servcies/api'
+import { Api } from '../../servcies/api'
 
 export default {
   name: 'HostItem',
@@ -44,11 +56,8 @@ export default {
     const api = new Api('host')
     /* const hostId = computed(() => route.params.id)
     watchEffect(() => console.log(hostId)) */
-    onMounted(async () => {
-      console.log('onMounted')
-      hostData.value = await api.get(route.params.id)
-      console.log(hostData.value)
-    })
+    hostData.value = await api.get(route.params.id)
+    console.log(hostData.value)
     return {
       hostData
     }

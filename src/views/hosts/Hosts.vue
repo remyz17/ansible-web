@@ -40,7 +40,7 @@
 <script>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { Api } from '../servcies/api'
+import { Api } from '../../servcies/api'
 
 export default {
   name: 'Hosts',
@@ -49,14 +49,17 @@ export default {
     const api = new Api('host')
     let res = ref([])
 
-    onMounted(async () => {
-      res.value = await api.get_multi()
-    })
+    res.value = await api.get_multi()
+    console.log('ahah timeout')
+
+    console.log(await api.update('5f159dc63f4693d65e963678', {
+      hostname: 'Test update from js'
+    }))
 
     return {
       onClick: (id) => {
         console.log('ahaha', id)
-        router.push(`/host/${id}`)
+        router.push({name: 'HostItem', params: { id } })
       },
       res
     }
