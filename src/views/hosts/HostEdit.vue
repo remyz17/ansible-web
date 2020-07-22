@@ -13,37 +13,18 @@
       <!-- Right side -->
       <div class="level-right">
         <p class="level-item">
-          <router-link :to="{name: 'HostEdit', params: { id: hostData.id }}" class="button">Edit</router-link>
+          <a class="button is-success">Save</a>
         </p>
         <p class="level-item">
-          <a class="button is-danger">Delete</a>
+          <router-link :to="{name: 'Host', params: { id: route.params.id }}" class="button is-danger">Cancel</router-link>
         </p>
       </div>
     </nav>
     <div class="columns">
       <div class="column">
         <p>
-          <strong>ID:</strong>
-          {{ hostData.id }}
+          ẗodo
         </p>
-        <p>
-          <strong>Hostname:</strong>
-          {{ hostData.hostname }}
-        </p>
-        <table class="table is-hoverable" v-if="hostData.hostvars">
-          <thead>
-            <tr>
-              <th>Key</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="_var in hostData.hostvars" :key="_var.key">
-              <td>{{ _var.key }}</td>
-              <td>{{ _var.value }}</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </div>
@@ -63,11 +44,12 @@ export default {
     const api = new Api("host");
     /* const hostId = computed(() => route.params.id)
     watchEffect(() => console.log(hostId)) */
-    hostData.value = await api.get(route.params.id);
-    console.log(hostData.value);
+    /* hostData.value = await api.get(route.params.id);
+    console.log(hostData.value); */
     return {
-      hostData
-    };
+      /* hostData */
+      route
+    }
   }
 };
 </script>

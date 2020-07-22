@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title">Hosts inventory</h1>
+      <h1 class="title">Groups inventory</h1>
       <!-- <h2 class="subtitle">
         A simple container to divide your page into
         <strong>sections</strong>, like the one you're currently reading
@@ -9,7 +9,7 @@
       <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
         <ul>
           <li class="is-active">
-            <router-link to="/hosts">Hosts inventory</router-link>
+            <router-link to="/groups">Groups inventory</router-link>
           </li>
         </ul>
       </nav>
@@ -25,7 +25,7 @@
             <div class="level-item">
               <div class="field has-addons">
                 <p class="control">
-                  <input class="input" type="text" placeholder="Find a host" />
+                  <input class="input" type="text" placeholder="Find a group" />
                 </p>
                 <p class="control">
                   <button class="button">Search</button>
@@ -40,7 +40,7 @@
               <strong>All</strong>
             </p>
             <p class="level-item">
-              <a>With group</a>
+              <a>With parent</a>
             </p>
             <p class="level-item">
               <a class="button">New</a>
@@ -57,9 +57,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="host in payload" :key="host.id" @click="onHostClick(host.id)">
-                  <td>{{ host.id }}</td>
-                  <td>{{ host.hostname }}</td>
+                <tr v-for="group in payload" :key="group.id" @click="onGroupClick(group.id)">
+                  <td>{{ group.id }}</td>
+                  <td>{{ group.name }}</td>
                 </tr>
               </tbody>
             </table>
@@ -76,19 +76,23 @@ import { useRouter } from 'vue-router'
 import { Api } from '../../servcies/api'
 
 export default {
-  name: 'Hosts',
+  name: 'Groups',
   async setup() {
     const router = useRouter()
-    const api = new Api('host')
+    const api = new Api('group')
     let payload = ref([])
 
     payload.value = await api.get_multi()
+    console.log(payload.value)
 
     return {
       payload,
-      onHostClick: (id) => router.push({name: 'HostItem', params: { id } }),
+      onGroupClick: (id) => router.push({name: 'GroupItem', params: { id }})
     }
-    
+
+    return {
+      data
+    }
   }
-};
+}
 </script>

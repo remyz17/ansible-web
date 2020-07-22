@@ -1,7 +1,6 @@
 <template>
   <Header />
   <main id="main">
-    <div class="container is-widescreen">
       <Suspense>
         <template #default>
           <!-- <router-view v-slot="{ Component }">
@@ -22,7 +21,6 @@
           </div>
         </template>
       </Suspense>
-    </div>
   </main>
   <Footer />
 </template>

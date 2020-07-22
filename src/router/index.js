@@ -8,13 +8,25 @@ const routes = [
   },
   {
     path: '/host/:id',
-    name: 'HostItem',
-    component: () => import('/@/views/hosts/HostItem.vue')
+    name: 'Host',
+    component: () => import('/@/views/hosts/Host.vue'),
+    children: [
+      {
+        path: '',
+        name: 'HostItem',
+        component: () => import('/@/views/hosts/HostItem.vue')
+      },
+      {
+        path: '/host/:id/edit',
+        name: 'HostEdit',
+        component: () => import('/@/views/hosts/HostEdit.vue')
+      }
+    ]
   },
   {
     path: '/groups',
     name: 'Groups',
-    component: () => import('/@/views/Groups.vue')
+    component: () => import('/@/views/groups/Groups.vue')
   },
   {
     path: '/about',
