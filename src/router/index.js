@@ -2,36 +2,50 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   {
-    path: '/hosts',
-    name: 'Hosts',
-    component: () => import('/@/views/hosts/Hosts.vue')
+    path: '/',
+    name: 'Home',
+    component: () => import( '/@/views/Home.vue')
   },
   {
-    path: '/host/:id',
-    name: 'Host',
-    component: () => import('/@/views/hosts/Host.vue'),
+    path: '/inventory',
+    name: 'Inventory',
+    component: () => import('/@/views/Inventory.vue'),
     children: [
       {
-        path: '',
-        name: 'HostItem',
-        component: () => import('/@/views/hosts/HostItem.vue')
+        path: 'hosts',
+        name: 'Hosts',
+        component: () => import('/@/views/hosts/Hosts.vue')
       },
       {
-        path: '/host/:id/edit',
-        name: 'HostEdit',
-        component: () => import('/@/views/hosts/HostEdit.vue')
+        path: 'host/:id',
+        name: 'Host',
+        component: () => import('/@/views/hosts/Host.vue'),
+        children: [
+          {
+            path: 'edit',
+            name: 'HostEditm',
+            component: () => import('/@/views/hosts/HostEdit.vue')
+          }
+        ]
+      },
+      {
+        path: 'groups',
+        name: 'Groups',
+        component: () => import('/@/views/groups/Groups.vue')
+      },
+      {
+        path: 'group/:id',
+        name: 'Group',
+        component: () => import('/@/views/groups/Group.vue'),
+        children: [
+          {
+            path: 'edit',
+            name: 'GroupEditm',
+            component: () => import('/@/views/groups/GroupEdit.vue')
+          }
+        ]
       }
     ]
-  },
-  {
-    path: '/groups',
-    name: 'Groups',
-    component: () => import('/@/views/groups/Groups.vue')
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import( '/@/views/About.vue')
   },
   {
     path: '/:catchAll(.*)',

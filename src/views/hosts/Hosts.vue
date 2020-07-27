@@ -1,73 +1,69 @@
 <template>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">Hosts inventory</h1>
-      <!-- <h2 class="subtitle">
-        A simple container to divide your page into
-        <strong>sections</strong>, like the one you're currently reading
-      </h2> -->
-      <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
-        <ul>
-          <li class="is-active">
-            <router-link to="/hosts">Hosts inventory</router-link>
-          </li>
-        </ul>
-      </nav>
-      <div class="box">
-        <nav class="level">
-          <!-- Left side -->
-          <div class="level-left">
-            <!-- <div class="level-item">
+  <h2 class="subtitle"><strong>Hosts</strong> list</h2>
+  <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+    <ul>
+      <li class="is-active">
+        <router-link to="/hosts">Hosts inventory</router-link>
+      </li>
+    </ul>
+  </nav>
+  <div class="box">
+    <nav class="level">
+      <!-- Left side -->
+      <div class="level-left">
+        <!-- <div class="level-item">
               <p class="subtitle is-5">
                 <strong>123</strong> Groups
               </p>
             </div>-->
-            <div class="level-item">
-              <div class="field has-addons">
-                <p class="control">
-                  <input class="input" type="text" placeholder="Find a host" />
-                </p>
-                <p class="control">
-                  <button class="button">Search</button>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right side -->
-          <div class="level-right">
-            <p class="level-item">
-              <strong>All</strong>
+        <div class="level-item">
+          <div class="field has-addons">
+            <p class="control">
+              <input class="input" type="text" placeholder="Find a host" />
             </p>
-            <p class="level-item">
-              <a>With group</a>
+            <p class="control">
+              <button class="button">Search</button>
             </p>
-            <p class="level-item">
-              <a class="button">New</a>
-            </p>
-          </div>
-        </nav>
-        <div class="columns">
-          <div class="column">
-            <table class="table is-hoverable">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>NAME</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="host in payload" :key="host.id" @click="onHostClick(host.id)">
-                  <td>{{ host.id }}</td>
-                  <td>{{ host.hostname }}</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
+
+      <!-- Right side -->
+      <div class="level-right">
+        <p class="level-item">
+          <strong>All</strong>
+        </p>
+        <p class="level-item">
+          <a>With group</a>
+        </p>
+        <p class="level-item">
+          <a class="button">New</a>
+        </p>
+      </div>
+    </nav>
+    <div class="columns">
+      <div class="column">
+        <table class="table is-hoverable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NAME</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="host in payload"
+              :key="host.id"
+              @click="onHostClick(host.id)"
+            >
+              <td>{{ host.id }}</td>
+              <td>{{ host.hostname }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -86,9 +82,8 @@ export default {
 
     return {
       payload,
-      onHostClick: (id) => router.push({name: 'HostItem', params: { id } }),
+      onHostClick: (id) => router.push({ name: 'Host', params: { id } }),
     }
-    
-  }
-};
+  },
+}
 </script>

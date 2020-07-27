@@ -1,13 +1,13 @@
 <template>
-  <h2 class="subtitle"><strong>Host</strong> item</h2>
+  <h2 class="subtitle"><strong>Group</strong> item</h2>
     <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li>
-        <router-link to="/inventory/hosts">Hosts inventory</router-link>
+        <router-link to="/inventory/groups">Groups inventory</router-link>
       </li>
       <li class="is-active">
-        <router-link :to="{ name: 'Host', params: { id: hostData.id } }">{{
-          hostData.hostname
+        <router-link :to="{ name: 'Group', params: { id: groupData.id } }">{{
+          groupData.name
         }}</router-link>
       </li>
     </ul>
@@ -16,14 +16,14 @@
     <nav class="level">
       <div class="level-left">
         <div class="level-item">
-          <p class="subtitle is-5"><strong>Host</strong> item</p>
+          <p class="subtitle is-5"><strong>Group</strong> item</p>
         </div>
       </div>
 
       <div class="level-right">
         <p class="level-item">
           <router-link
-            :to="{ name: 'Host', params: { id: hostData.id } }"
+            :to="{ name: 'Group', params: { id: groupData.id } }"
             class="button"
             >Edit</router-link
           >
@@ -37,15 +37,15 @@
       <div class="column">
         <p>
           <strong>ID:</strong>
-          {{ hostData.id }}
+          {{ groupData.id }}
         </p>
         <p>
-          <strong>Hostname:</strong>
-          {{ hostData.hostname }}
+          <strong>Name:</strong>
+          {{ groupData.name }}
         </p>
       </div>
       <div class="column">
-        <table class="table is-hoverable" v-if="hostData.hostvars">
+        <table class="table is-hoverable" v-if="groupData.groupvars">
           <thead>
             <tr>
               <th>Key</th>
@@ -53,7 +53,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(_var, index) in hostData.hostvars" :key="index">
+            <tr v-for="(_var, index) in groupData.groupvars" :key="index">
               <td>{{ _var.key }}</td>
               <td>{{ _var.value }}</td>
             </tr>
@@ -84,19 +84,19 @@ export default {
   async setup() {
     const route = useRoute()
     const router = useRouter()
-    const hostData = ref([])
-    const api = new Api('host')
+    const groupData = ref([])
+    const api = new Api('group')
 
     /* watch(route, async () => {
       console.log('watch trigger')
-      hostData.value = await api.get(route.params.id)
+      groupData.value = await api.get(route.params.id)
     }) */
 
     watchEffect(() => console.log('trigger', route))
 
-    hostData.value = await api.get(route.params.id)
+    groupData.value = await api.get(route.params.id)
     return {
-      hostData,
+      groupData,
     }
   },
 }
