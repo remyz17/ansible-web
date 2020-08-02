@@ -44,7 +44,8 @@
   color: #00d1b2;
 }
 .navbar-dropdown .router-link-exact-active {
-  background-color: whitesmoke; 
+  background-color: whitesmoke;
+  color: #00d1b2;
 }
 </style>
 

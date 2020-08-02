@@ -1,6 +1,6 @@
 <template>
   <h2 class="subtitle"><strong>Host</strong> item</h2>
-    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+  <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li>
         <router-link to="/inventory/hosts">Hosts inventory</router-link>
@@ -45,11 +45,11 @@
         </p>
         <p v-if="hostData.group">
           <strong>Group:</strong>
-          {{ hostData.group }}
+          {{ hostData.group.name }}
         </p>
       </div>
       <div class="column">
-        <table class="table is-hoverable" v-if="hostData.hostvars">
+        <table class="table is-hoverable" v-if="hostData.hostvars && hostData.hostvars.length > 0">
           <thead>
             <tr>
               <th>Key</th>
@@ -67,16 +67,6 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-#Hostloader {
-  width: 150px;
-  padding: 20px 40px;
-}
-#Hostloader src {
-  fill: #ff0000;
-}
-</style>
 
 <script>
 import { watchEffect, watch, ref, onMounted } from 'vue'

@@ -29,6 +29,11 @@ const routes = [
         ] */
       },
       {
+        path: 'host/create',
+        name: 'HostCreate',
+        component: () => import('/@/views/hosts/Create.vue')
+      },
+      {
         path: 'groups',
         name: 'Groups',
         component: () => import('/@/views/groups/List.vue')
