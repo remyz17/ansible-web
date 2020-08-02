@@ -48,6 +48,7 @@
             <tr>
               <th>ID</th>
               <th>NAME</th>
+              <th>GROUP</th>
             </tr>
           </thead>
           <tbody>
@@ -58,6 +59,7 @@
             >
               <td>{{ host.id }}</td>
               <td>{{ host.hostname }}</td>
+              <td>{{ host.group ? host.group.name : ''  }}</td>
             </tr>
           </tbody>
         </table>

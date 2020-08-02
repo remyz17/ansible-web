@@ -43,6 +43,10 @@
           <strong>Hostname:</strong>
           {{ hostData.hostname }}
         </p>
+        <p v-if="hostData.group">
+          <strong>Group:</strong>
+          {{ hostData.group }}
+        </p>
       </div>
       <div class="column">
         <table class="table is-hoverable" v-if="hostData.hostvars">
