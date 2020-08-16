@@ -43,6 +43,10 @@
           <strong>Name:</strong>
           {{ groupData.name }}
         </p>
+        <p v-if="groupData.parent">
+          <strong>Group: </strong>
+          <router-link :to="{ name: 'Group', params: { id: groupData.parent_id } }">{{ groupData.parent.name }}</router-link>
+        </p>
       </div>
       <div class="column">
         <table class="table is-hoverable" v-if="groupData.groupvars">
@@ -87,12 +91,15 @@ export default {
     const groupData = ref([])
     const api = new Api('group')
 
-    /* watch(route, async () => {
+    watch(route, async () => {
       console.log('watch trigger')
       groupData.value = await api.get(route.params.id)
-    }) */
+    })
 
-    watchEffect(() => console.log('trigger', route))
+    /* watchEffect(() => {
+      console.log('trigger', route.params)
+      groupData.value = await api.get(route.params.id)
+    }) */
 
     groupData.value = await api.get(route.params.id)
     return {

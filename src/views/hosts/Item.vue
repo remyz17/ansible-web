@@ -44,8 +44,8 @@
           {{ hostData.hostname }}
         </p>
         <p v-if="hostData.group">
-          <strong>Group:</strong>
-          {{ hostData.group.name }}
+          <strong>Group: </strong>
+          <router-link :to="{ name: 'Group', params: { id: hostData.group_id } }">{{ hostData.group.name }}</router-link>
         </p>
       </div>
       <div class="column">

@@ -48,6 +48,7 @@
             <tr>
               <th>ID</th>
               <th>NAME</th>
+              <th>PARENT GROUP</th>
             </tr>
           </thead>
           <tbody>
@@ -58,6 +59,7 @@
             >
               <td>{{ group.id }}</td>
               <td>{{ group.name }}</td>
+              <td>{{ group.parent ? group.parent.name : ''  }}</td>
             </tr>
           </tbody>
         </table>
