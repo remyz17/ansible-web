@@ -1,7 +1,5 @@
 <template>
-  <h2 class="subtitle">
-    <strong>Host</strong> item
-  </h2>
+  <h2 class="subtitle"><strong>Host</strong> item</h2>
   <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li>
@@ -16,15 +14,15 @@
     <nav class="level">
       <div class="level-left">
         <div class="level-item">
-          <p class="subtitle is-5">
-            <strong>Host</strong> create
-          </p>
+          <p class="subtitle is-5"><strong>Host</strong> create</p>
         </div>
       </div>
 
       <div class="level-right">
         <p class="level-item">
-          <router-link :to="{ name: 'Hosts' }" class="button">Cancel</router-link>
+          <router-link :to="{ name: 'Hosts' }" class="button"
+            >Cancel</router-link
+          >
         </p>
         <p class="level-item">
           <a class="button is-success">Save</a>
@@ -47,10 +45,20 @@
               type="text"
               placeholder="Group"
               :v-model="group"
-              @input="searchGroup"
+              @input="searchFn($event.target.value)"
             />
           </div>
         </div>
+      </div>
+      <div class="content">
+        <ol type="1">
+          <li
+            v-for="group in payload"
+            :key="group.id"
+          >
+            {{ group.name }}
+          </li>
+        </ol>
       </div>
       <div class="column"></div>
       <div class="column"></div>
@@ -60,15 +68,25 @@
 
 <script>
 import { ref } from 'vue'
+import { Api } from '../../servcies/api'
 
 export default {
   name: 'HostCreate',
-  setup() {
+  async setup() {
     const group = ref('')
+    const api = new Api('group')
+    let payload = ref([])
+
+    const searchFn = async (query) => {
+      payload.value = await api.search(query)
+      console.log(payload.value)
+    }
 
     return {
       group,
+      searchFn,
+      payload,
     }
-  }
+  },
 }
 </script>

@@ -55,6 +55,18 @@ class Api {
     }
   }
 
+  async search(query) {
+    try {
+      const res = await this._fetch(
+        `/search?name=${query}`,
+        'GET'
+      )
+      return res
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+
   async create(payload) {
     try {
       const res = await this._fetch(
