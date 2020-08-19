@@ -1,5 +1,7 @@
 <template>
-  <h2 class="subtitle"><strong>Host</strong> item</h2>
+  <h2 class="subtitle">
+    <strong>Host</strong> item
+  </h2>
   <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li>
@@ -14,15 +16,15 @@
     <nav class="level">
       <div class="level-left">
         <div class="level-item">
-          <p class="subtitle is-5"><strong>Host</strong> create</p>
+          <p class="subtitle is-5">
+            <strong>Host</strong> create
+          </p>
         </div>
       </div>
 
       <div class="level-right">
         <p class="level-item">
-          <router-link :to="{ name: 'Hosts' }" class="button"
-            >Cancel</router-link
-          >
+          <router-link :to="{ name: 'Hosts' }" class="button">Cancel</router-link>
         </p>
         <p class="level-item">
           <a class="button is-success">Save</a>
@@ -37,19 +39,36 @@
             <input class="input" type="text" placeholder="Hostname" />
           </div>
         </div>
+        <div class="field">
+          <label class="label">Group</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Group"
+              :v-model="group"
+              @input="searchGroup"
+            />
+          </div>
+        </div>
       </div>
-      <div class="column">
-      
-      </div>
-      <div class="column">
-
-      </div>
+      <div class="column"></div>
+      <div class="column"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue'
+
 export default {
   name: 'HostCreate',
+  setup() {
+    const group = ref('')
+
+    return {
+      group,
+    }
+  }
 }
 </script>
