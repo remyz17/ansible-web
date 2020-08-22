@@ -37,28 +37,33 @@
             <input class="input" type="text" placeholder="Hostname" />
           </div>
         </div>
-        <div class="field">
-          <label class="label">Group</label>
-          <div class="control">
-            <input
-              class="input"
-              type="text"
-              placeholder="Group"
-              :v-model="group"
-              @input="searchFn($event.target.value)"
-            />
+
+        <div class="dropdown" :class="[data.length > 0 ? 'is-active' : '']">
+          <div class="dropdown-trigger">
+            <div class="field">
+              <label class="label">Group</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Group"
+                  @input="debouceSearch($event.target.value)"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+            <div class="dropdown-content">
+              <a v-for="group in data" :key="group.id" class="dropdown-item">
+                {{ group.name }}
+              </a>
+              <hr class="dropdown-divider" />
+              <router-link to="/inventory/group/create" class="dropdown-item">
+                Create
+              </router-link>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="content">
-        <ol type="1">
-          <li
-            v-for="group in payload"
-            :key="group.id"
-          >
-            {{ group.name }}
-          </li>
-        </ol>
       </div>
       <div class="column"></div>
       <div class="column"></div>
@@ -66,26 +71,42 @@
   </div>
 </template>
 
+<style scoped>
+.searchGroup {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.26s ease;
+}
+.searchGroup.expanded {
+  transform: scaleY(1);
+}
+</style>
+
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Api } from '../../servcies/api'
 
 export default {
   name: 'HostCreate',
   async setup() {
-    const group = ref('')
     const api = new Api('group')
     let payload = ref([])
+    let timeoutRef = null
 
-    const searchFn = async (query) => {
-      payload.value = await api.search(query)
-      console.log(payload.value)
+    const debouceSearch = query => {
+      if (query == '') return
+      if (timeoutRef !== null) {
+        clearTimeout(timeoutRef)
+      }
+      timeoutRef = setTimeout(async () => {
+        payload.value = await api.search(query)
+        console.log(payload.value)
+      }, 200)
     }
 
     return {
-      group,
-      searchFn,
-      payload,
+      data: computed(() => payload.value),
+      debouceSearch
     }
   },
 }
