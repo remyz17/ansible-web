@@ -30,31 +30,51 @@
       </div>
     </nav>
     <div class="columns">
-      <div class="column">
-        <div class="field">
-          <label class="label">Hostname</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="Hostname" />
+      <div class="column is-4 is-12-mobile">
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Hostname</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input class="input" type="text" placeholder="Hostname" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="dropdown" :class="[data.length > 0 ? 'is-active' : '']">
-          <div class="dropdown-trigger">
-            <div class="field">
-              <label class="label">Group</label>
-              <div class="control">
-                <input
-                  class="input"
-                  type="text"
-                  placeholder="Group"
-                  @input="debouceSearch($event.target.value)"
-                />
+        <div class="dropdown w100" :class="{ 'is-active': searchActive }">
+          <div class="dropdown-trigger w100">
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Group</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="Group"
+                      v-model="groupModel"
+                      :readonly="groupModelRO"
+                      @input="debouceSearch($event.target.value)"
+                      @dblclick="setGroupRW"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <div class="dropdown-menu" id="dropdown-menu3" role="menu">
             <div class="dropdown-content">
-              <a v-for="group in data" :key="group.id" class="dropdown-item">
+              <a
+                v-for="group in data"
+                :key="group.id"
+                class="dropdown-item"
+                @click="setGroup(group)"
+              >
                 {{ group.name }}
               </a>
               <hr class="dropdown-divider" />
@@ -65,8 +85,74 @@
           </div>
         </div>
       </div>
-      <div class="column"></div>
-      <div class="column"></div>
+      <div class="column is-8 is-12-mobile">
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Hostvars</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <input 
+                class="input"
+                type="text"
+                placeholder="Key"
+                v-model="keyModel"
+              />
+            </div>
+            <div class="field has-addons">
+              <p class="control">
+              <input
+                class="input"
+                type="text"
+                placeholder="Value"
+                v-model="valueModel"
+              />
+              </p>
+              <p class="control">
+                <a 
+                  class="button"
+                  @click="addHostVar"
+                >
+                  Add
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div v-show="hostVars.length > 0" v-for="(param, index) in hostVars" :key="param.key" class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">{{ index + 1 }}</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <input 
+                class="input"
+                type="text"
+                :value="param.key"
+                readonly
+              />
+            </div>
+            <div class="field has-addons">
+              <p class="control">
+              <input
+                class="input"
+                type="text"
+                :value="param.value"
+                readonly
+              />
+              </p>
+              <p class="control">
+                <a 
+                  class="button is-danger"
+                  @click="deleteHostVar(index)"
+                >
+                  delete
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -80,33 +166,75 @@
 .searchGroup.expanded {
   transform: scaleY(1);
 }
+
+.w100 {
+  width: 100%;
+}
 </style>
 
 <script>
 import { ref, computed } from 'vue'
 import { Api } from '../../servcies/api'
 
+const api = new Api('group')
+
 export default {
   name: 'HostCreate',
   async setup() {
-    const api = new Api('group')
     let payload = ref([])
+    let searchActive = ref(false)
+    let groupModel = ref('')
+    let groupModelRO = ref(false)
+    let hostVars = ref([])
+    let keyModel = ref('')
+    let valueModel = ref('')
     let timeoutRef = null
 
-    const debouceSearch = query => {
+    const debouceSearch = (query) => {
       if (query == '') return
       if (timeoutRef !== null) {
         clearTimeout(timeoutRef)
       }
       timeoutRef = setTimeout(async () => {
         payload.value = await api.search(query)
+        searchActive.value = true
         console.log(payload.value)
       }, 200)
     }
 
+    const setGroup = async (group) => {
+      console.log(group)
+      groupModel.value = `${group.name} <${group.id}>`
+      groupModelRO.value = true
+      searchActive.value = false
+    }
+
+    const addHostVar = () => {
+      console.log(hostVars.value)
+      hostVars.value.push(
+        {
+          'key': keyModel.value,
+          'value': valueModel.value
+        }
+      )
+      console.log(hostVars.value)
+    }
+
+    const deleteHostVar = index => hostVars.value.splice(index, 1)
+
     return {
       data: computed(() => payload.value),
-      debouceSearch
+      groupModel,
+      debouceSearch,
+      searchActive,
+      setGroup,
+      groupModelRO,
+      setGroupRW: () => (groupModelRO.value = false),
+      hostVars,
+      addHostVar,
+      deleteHostVar: index => hostVars.value.splice(index, 1),
+      keyModel,
+      valueModel
     }
   },
 }
