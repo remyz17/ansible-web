@@ -43,13 +43,12 @@
             </div>
           </div>
         </div>
-
-        <div class="dropdown w100" :class="{ 'is-active': searchActive }">
-          <div class="dropdown-trigger w100">
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Group</label>
-              </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Group</label>
+          </div>
+          <div class="dropdown w100" :class="{ 'is-active': searchActive }">
+            <div class="dropdown-trigger w100">
               <div class="field-body">
                 <div class="field">
                   <div class="control">
@@ -66,8 +65,7 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+            <div class="dropdown-menu w100" id="dropdown-menu3" role="menu">
             <div class="dropdown-content">
               <a
                 v-for="group in data"
@@ -82,6 +80,7 @@
                 Create
               </router-link>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -158,15 +157,6 @@
 </template>
 
 <style scoped>
-.searchGroup {
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.26s ease;
-}
-.searchGroup.expanded {
-  transform: scaleY(1);
-}
-
 .w100 {
   width: 100%;
 }
