@@ -25,7 +25,7 @@
           >
         </p>
         <p class="level-item">
-          <a class="button is-success">Save</a>
+          <a @click="createHost" class="button is-success">Create</a>
         </p>
       </div>
     </nav>
@@ -38,7 +38,12 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input class="input" type="text" placeholder="Hostname" />
+                <input 
+                  class="input"
+                  type="text"
+                  placeholder="Hostname"
+                  v-model="hostnameModel"
+                />
               </div>
             </div>
           </div>
@@ -163,21 +168,24 @@
 </style>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { Api } from '../../servcies/api'
 
-const api = new Api('group')
+const groupApi = new Api('group')
+const hostApi = new Api('host')
 
 export default {
   name: 'HostCreate',
   async setup() {
-    let payload = ref([])
-    let searchActive = ref(false)
+    let hostnameModel = ref('')
     let groupModel = ref('')
     let groupModelRO = ref(false)
+    let groupId = ref('')
     let hostVars = ref([])
     let keyModel = ref('')
     let valueModel = ref('')
+    let payload = ref([])
+    let searchActive = ref(false)
     let timeoutRef = null
 
     const debouceSearch = (query) => {
@@ -186,7 +194,7 @@ export default {
         clearTimeout(timeoutRef)
       }
       timeoutRef = setTimeout(async () => {
-        payload.value = await api.search(query)
+        payload.value = await groupApi.search(query)
         searchActive.value = true
         console.log(payload.value)
       }, 200)
@@ -194,7 +202,8 @@ export default {
 
     const setGroup = async (group) => {
       console.log(group)
-      groupModel.value = `${group.name} <${group.id}>`
+      groupModel.value = group.name
+      groupId.value = group.id
       groupModelRO.value = true
       searchActive.value = false
     }
@@ -212,8 +221,19 @@ export default {
 
     const deleteHostVar = index => hostVars.value.splice(index, 1)
 
+    const createHost = async () => {
+      let vals = {
+        'hostname': hostnameModel.value,
+        'group_id': groupId.value,
+        'hostvars': hostVars.value
+      }
+      let newHost = await hostApi.create(vals)
+      console.log(newHost)
+    }
+
     return {
       data: computed(() => payload.value),
+      hostnameModel,
       groupModel,
       debouceSearch,
       searchActive,
@@ -224,7 +244,8 @@ export default {
       addHostVar,
       deleteHostVar: index => hostVars.value.splice(index, 1),
       keyModel,
-      valueModel
+      valueModel,
+      createHost
     }
   },
 }

@@ -18,6 +18,10 @@ class Api {
           this.baseUrl + url,
           {
             method: method,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
             body: JSON.stringify(body)
           }
         )
