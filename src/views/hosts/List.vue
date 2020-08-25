@@ -19,10 +19,10 @@
         <div class="level-item">
           <div class="field has-addons">
             <p class="control">
-              <input class="input" type="text" placeholder="Find a host" />
+              <input class="input" type="text" placeholder="Find a host" v-model="hostExprModel"/>
             </p>
             <p class="control">
-              <button class="button">Search</button>
+              <button class="button" @click="handleSearch">Search</button>
             </p>
           </div>
         </div>
@@ -73,18 +73,28 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Api } from '../../servcies/api'
 
+const api = new Api('host')
+
 export default {
   name: 'Hosts',
   async setup() {
-    const router = useRouter()
-    const api = new Api('host')
+    let router = useRouter()
     let payload = ref([])
+    let hostExprModel = ref('')
 
     payload.value = await api.get_multi()
+
+    const handleSearch = async () => {
+      let res = await api.search(hostExprModel.value)
+      console.log(res)
+      payload.value = res
+    }
 
     return {
       payload,
       onHostClick: (id) => router.push({ name: 'Host', params: { id } }),
+      hostExprModel,
+      handleSearch
     }
   },
 }
