@@ -25,7 +25,7 @@
           >
         </p>
         <p class="level-item">
-          <a @click="createHost" class="button is-success">Create</a>
+          <a @click="createHost" class="button is-success" :class="{ 'is-loading': createLoding }">Create</a>
         </p>
       </div>
     </nav>
@@ -64,8 +64,9 @@
                       v-model="groupModel"
                       :readonly="groupModelRO"
                       @input="debouceSearch($event.target.value)"
-                      @dblclick="setGroupRW"
+                      @dblclick="unsetGroup"
                     />
+                    <!-- @blur="onBlurGroup" this make the @click="setGroup(group)" uncallable -->
                   </div>
                 </div>
               </div>
@@ -169,6 +170,7 @@
 
 <script>
 import { ref, computed, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { Api } from '../../servcies/api'
 
 const groupApi = new Api('group')
@@ -177,6 +179,7 @@ const hostApi = new Api('host')
 export default {
   name: 'HostCreate',
   async setup() {
+    let router = useRouter()
     let hostnameModel = ref('')
     let groupModel = ref('')
     let groupModelRO = ref(false)
@@ -186,6 +189,7 @@ export default {
     let valueModel = ref('')
     let payload = ref([])
     let searchActive = ref(false)
+    let createLoding = ref(false)
     let timeoutRef = null
 
     const debouceSearch = (query) => {
@@ -200,12 +204,17 @@ export default {
       }, 200)
     }
 
-    const setGroup = async (group) => {
-      console.log(group)
+    const setGroup = (group) => {
+      console.log('group set', group)
       groupModel.value = group.name
       groupId.value = group.id
       groupModelRO.value = true
       searchActive.value = false
+    }
+
+    const unsetGroup = () => {
+      groupId.value = ''
+      groupModelRO.value = false
     }
 
     const addHostVar = () => {
@@ -222,13 +231,19 @@ export default {
     const deleteHostVar = index => hostVars.value.splice(index, 1)
 
     const createHost = async () => {
+      createLoding.value = true
+      if (groupId.value) {
+        console.log('passing')
+      }
       let vals = {
-        'hostname': hostnameModel.value,
-        'group_id': groupId.value,
-        'hostvars': hostVars.value
+        hostname: hostnameModel.value,
+        ...(groupId.value && {group_id: groupId.value}),
+        ...(hostVars.value.length && {hostvars: hostVars.value})
       }
       let newHost = await hostApi.create(vals)
       console.log(newHost)
+      createLoding.value = false
+      router.push({ name: 'Host', params: { id: newHost.id } })
     }
 
     return {
@@ -238,14 +253,15 @@ export default {
       debouceSearch,
       searchActive,
       setGroup,
+      unsetGroup,
       groupModelRO,
-      setGroupRW: () => (groupModelRO.value = false),
       hostVars,
       addHostVar,
       deleteHostVar: index => hostVars.value.splice(index, 1),
       keyModel,
       valueModel,
-      createHost
+      createHost,
+      createLoding
     }
   },
 }
