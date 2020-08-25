@@ -29,7 +29,13 @@
           >
         </p>
         <p class="level-item">
-          <a class="button is-danger">Delete</a>
+          <a 
+            class="button is-danger" 
+            :class="{ 'is-loading': deletePending }"
+            @click="handleDelete"
+          >
+            Delete
+          </a>
         </p>
       </div>
     </nav>
@@ -69,17 +75,19 @@
 </template>
 
 <script>
-import { watchEffect, watch, ref, onMounted } from 'vue'
+import { watchEffect, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Api } from '../../servcies/api'
+
+const api = new Api('host')
 
 export default {
   name: 'Host',
   async setup() {
-    const route = useRoute()
-    const router = useRouter()
-    const hostData = ref([])
-    const api = new Api('host')
+    let router = useRouter()
+    let route = useRoute()
+    let hostData = ref([])
+    let deletePending = ref(false)
 
     /* watch(route, async () => {
       console.log('watch trigger')
@@ -88,9 +96,18 @@ export default {
 
     watchEffect(() => console.log('trigger', route))
 
+    const handleDelete = async () => {
+      deletePending.value = true
+      await api.delete(hostData.value.id)
+      deletePending.value = false
+      router.push('/inventory/hosts')
+    }
+
     hostData.value = await api.get(route.params.id)
     return {
       hostData,
+      deletePending,
+      handleDelete,
     }
   },
 }
