@@ -3,28 +3,22 @@ class Api {
     this.baseUrl = `/api/${baseUrl}`
   }
 
-  async _fetch(url, method, body=false) {
+  async _fetch(url, method, body = false) {
     try {
       let payload = null
       if (!body) {
-        payload = await fetch(
-          this.baseUrl + url,
-          {
-            method: method
-          }
-        )
+        payload = await fetch(this.baseUrl + url, {
+          method: method,
+        })
       } else {
-        payload = await fetch(
-          this.baseUrl + url,
-          {
-            method: method,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-          }
-        )
+        payload = await fetch(this.baseUrl + url, {
+          method: method,
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        })
       }
       const res = await payload.json()
       console.log(payload)
@@ -34,12 +28,19 @@ class Api {
     }
   }
 
-  async get_multi(limit=80) {
+  async count_docs() {
     try {
-      const res = await this._fetch(
-        '/get_multi',
-        'GET'
-      )
+      const res = await this._fetch('/count', 'GET')
+      console.log(res)
+      return res
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+
+  async get_multi(limit = 80) {
+    try {
+      const res = await this._fetch('/get_multi', 'GET')
       console.log(res)
       return res
     } catch (err) {
@@ -49,10 +50,7 @@ class Api {
 
   async get(id) {
     try {
-      const res = await this._fetch(
-        `/get/${id}`,
-        'GET'
-      )
+      const res = await this._fetch(`/get/${id}`, 'GET')
       return res
     } catch (err) {
       console.log('err', err)
@@ -61,10 +59,7 @@ class Api {
 
   async search(query) {
     try {
-      const res = await this._fetch(
-        `/search?name=${query}`,
-        'GET'
-      )
+      const res = await this._fetch(`/search?name=${query}`, 'GET')
       return res
     } catch (err) {
       console.log('err', err)
@@ -73,11 +68,7 @@ class Api {
 
   async create(payload) {
     try {
-      const res = await this._fetch(
-        '/create',
-        'POST',
-        payload
-      )
+      const res = await this._fetch('/create', 'POST', payload)
       return res
     } catch (err) {
       console.log('err', err)
@@ -86,11 +77,7 @@ class Api {
 
   async update(id, payload) {
     try {
-      const res = await this._fetch(
-        `/update/${id}`,
-        'PUT',
-        payload
-      )
+      const res = await this._fetch(`/update/${id}`, 'PUT', payload)
       return res
     } catch (err) {
       console.log('err', err)
@@ -99,10 +86,7 @@ class Api {
 
   async delete(id) {
     try {
-      const res = await this._fetch(
-        `/delete/${id}`,
-        'DELETE'
-      )
+      const res = await this._fetch(`/delete/${id}`, 'DELETE')
       return res
     } catch (err) {
       console.log('err', err)
@@ -110,6 +94,4 @@ class Api {
   }
 }
 
-export {
-  Api
-}
+export default Api
