@@ -29,8 +29,8 @@
           >
         </p>
         <p class="level-item">
-          <a 
-            class="button is-danger" 
+          <a
+            class="button is-danger"
             :class="{ 'is-loading': deletePending }"
             @click="handleDelete"
           >
@@ -51,11 +51,17 @@
         </p>
         <p v-if="hostData.group">
           <strong>Group: </strong>
-          <router-link :to="{ name: 'Group', params: { id: hostData.group_id } }">{{ hostData.group.name }}</router-link>
+          <router-link
+            :to="{ name: 'Group', params: { id: hostData.group_id } }"
+            >{{ hostData.group.name }}</router-link
+          >
         </p>
       </div>
       <div class="column">
-        <table class="table is-hoverable" v-if="hostData.hostvars && hostData.hostvars.length > 0">
+        <table
+          class="table is-hoverable"
+          v-if="hostData.hostvars && hostData.hostvars.length > 0"
+        >
           <thead>
             <tr>
               <th>Key</th>
@@ -77,9 +83,7 @@
 <script>
 import { watchEffect, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Api } from '../../servcies/api'
-
-const api = new Api('host')
+import hostApi from '../../servcies/inventory/host'
 
 export default {
   name: 'Host',
@@ -98,12 +102,12 @@ export default {
 
     const handleDelete = async () => {
       deletePending.value = true
-      await api.delete(hostData.value.id)
+      await hostApi.delete(hostData.value.id)
       deletePending.value = false
       router.push('/inventory/hosts')
     }
 
-    hostData.value = await api.get(route.params.id)
+    hostData.value = await hostApi.get(route.params.id)
     return {
       hostData,
       deletePending,

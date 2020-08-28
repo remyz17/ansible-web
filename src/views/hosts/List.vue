@@ -1,9 +1,8 @@
 <template>
-  <h2 class="subtitle"><strong>Hosts</strong> list</h2>
   <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li class="is-active">
-        <router-link to="/hosts">Hosts inventory</router-link>
+        <router-link to="/hosts">Host inventory</router-link>
       </li>
     </ul>
   </nav>
@@ -12,17 +11,17 @@
       <!-- Left side -->
       <div class="level-left">
         <!-- <div class="level-item">
-              <p class="subtitle is-5">
-                <strong>123</strong> Groups
-              </p>
-            </div>-->
+          <p class="subtitle is-5"><strong>123</strong> Groups</p>
+        </div> -->
         <div class="level-item">
           <div class="field has-addons">
             <p class="control">
-              <input class="input" type="text" placeholder="Find a host" v-model="hostExprModel"/>
-            </p>
-            <p class="control">
-              <button class="button" @click="handleSearch">Search</button>
+              <input
+                class="input"
+                type="text"
+                placeholder="Find a host"
+                @input="searchHost($event.target.value)"
+              />
             </p>
           </div>
         </div>
@@ -30,14 +29,16 @@
 
       <!-- Right side -->
       <div class="level-right">
-        <p class="level-item">
+        <!-- <p class="level-item">
           <strong>All</strong>
         </p>
         <p class="level-item">
           <a>With group</a>
-        </p>
+        </p> -->
         <p class="level-item">
-          <router-link :to="{ name: 'HostCreate' }" class="button">New</router-link>
+          <router-link :to="{ name: 'HostCreate' }" class="button"
+            >Create</router-link
+          >
         </p>
       </div>
     </nav>
@@ -53,13 +54,13 @@
           </thead>
           <tbody>
             <tr
-              v-for="host in payload"
+              v-for="host in hostList"
               :key="host.id"
               @click="onHostClick(host.id)"
             >
               <td>{{ host.id }}</td>
               <td>{{ host.hostname }}</td>
-              <td>{{ host.group ? host.group.name : ''  }}</td>
+              <td>{{ host.group ? host.group.name : '' }}</td>
             </tr>
           </tbody>
         </table>
@@ -71,30 +72,31 @@
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { Api } from '../../servcies/api'
-
-const api = new Api('host')
+import hostApi from '../../servcies/inventory/host'
 
 export default {
   name: 'Hosts',
   async setup() {
     let router = useRouter()
-    let payload = ref([])
-    let hostExprModel = ref('')
+    let hostList = ref([])
+    let timeoutRef = null
 
-    payload.value = await api.get_multi()
+    hostList.value = await hostApi.get_multi()
 
-    const handleSearch = async () => {
-      let res = await api.search(hostExprModel.value)
-      console.log(res)
-      payload.value = res
+    const onHostClick = (id) => router.push({ name: 'Host', params: { id } })
+
+    const searchHost = async (query) => {
+      if (timeoutRef !== null) clearTimeout(timeoutRef)
+      timeoutRef = setTimeout(async () => {
+        if (query == '') hostList.value = await hostApi.get_multi()
+        else hostList.value = await hostApi.search(query)
+      }, 200)
     }
 
     return {
-      payload,
-      onHostClick: (id) => router.push({ name: 'Host', params: { id } }),
-      hostExprModel,
-      handleSearch
+      hostList,
+      onHostClick,
+      searchHost,
     }
   },
 }

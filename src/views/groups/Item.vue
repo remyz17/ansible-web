@@ -1,6 +1,6 @@
 <template>
   <h2 class="subtitle"><strong>Group</strong> item</h2>
-    <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+  <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li>
         <router-link to="/inventory/groups">Groups inventory</router-link>
@@ -45,7 +45,10 @@
         </p>
         <p v-if="groupData.parent">
           <strong>Group: </strong>
-          <router-link :to="{ name: 'Group', params: { id: groupData.parent_id } }">{{ groupData.parent.name }}</router-link>
+          <router-link
+            :to="{ name: 'Group', params: { id: groupData.parent_id } }"
+            >{{ groupData.parent.name }}</router-link
+          >
         </p>
       </div>
       <div class="column">
@@ -81,7 +84,7 @@
 <script>
 import { watchEffect, watch, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Api } from '../../servcies/api'
+import groupApi from '../../servcies/inventory/group'
 
 export default {
   name: 'Host',
@@ -89,11 +92,10 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const groupData = ref([])
-    const api = new Api('group')
 
     watch(route, async () => {
       console.log('watch trigger')
-      groupData.value = await api.get(route.params.id)
+      groupData.value = await groupApi.get(route.params.id)
     })
 
     /* watchEffect(() => {
@@ -101,7 +103,7 @@ export default {
       groupData.value = await api.get(route.params.id)
     }) */
 
-    groupData.value = await api.get(route.params.id)
+    groupData.value = await groupApi.get(route.params.id)
     return {
       groupData,
     }

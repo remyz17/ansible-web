@@ -25,7 +25,12 @@
           >
         </p>
         <p class="level-item">
-          <a @click="createHost" class="button is-success" :class="{ 'is-loading': createLoding }">Create</a>
+          <a
+            @click="createHost"
+            class="button is-success"
+            :class="{ 'is-loading': createLoding }"
+            >Create</a
+          >
         </p>
       </div>
     </nav>
@@ -38,7 +43,7 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input 
+                <input
                   class="input"
                   type="text"
                   placeholder="Hostname"
@@ -72,21 +77,21 @@
               </div>
             </div>
             <div class="dropdown-menu w100" id="dropdown-menu3" role="menu">
-            <div class="dropdown-content">
-              <a
-                v-for="group in data"
-                :key="group.id"
-                class="dropdown-item"
-                @click="setGroup(group)"
-              >
-                {{ group.name }}
-              </a>
-              <hr class="dropdown-divider" />
-              <router-link to="/inventory/group/create" class="dropdown-item">
-                Create
-              </router-link>
+              <div class="dropdown-content">
+                <a
+                  v-for="group in data"
+                  :key="group.id"
+                  class="dropdown-item"
+                  @click="setGroup(group)"
+                >
+                  {{ group.name }}
+                </a>
+                <hr class="dropdown-divider" />
+                <router-link to="/inventory/group/create" class="dropdown-item">
+                  Create
+                </router-link>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -97,7 +102,7 @@
           </div>
           <div class="field-body">
             <div class="field">
-              <input 
+              <input
                 class="input"
                 type="text"
                 placeholder="Key"
@@ -106,51 +111,43 @@
             </div>
             <div class="field has-addons">
               <p class="control">
-              <input
-                class="input"
-                type="text"
-                placeholder="Value"
-                v-model="valueModel"
-              />
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Value"
+                  v-model="valueModel"
+                />
               </p>
               <p class="control">
-                <a 
-                  class="button"
-                  @click="addHostVar"
-                >
-                  Add
-                </a>
+                <a class="button" @click="addHostVar"> Add </a>
               </p>
             </div>
           </div>
         </div>
-        <div v-show="hostVars.length > 0" v-for="(param, index) in hostVars" :key="param.key" class="field is-horizontal">
+        <div
+          v-show="hostVars.length > 0"
+          v-for="(param, index) in hostVars"
+          :key="param.key"
+          class="field is-horizontal"
+        >
           <div class="field-label is-normal">
             <label class="label">{{ index + 1 }}</label>
           </div>
           <div class="field-body">
             <div class="field">
-              <input 
-                class="input"
-                type="text"
-                :value="param.key"
-                readonly
-              />
+              <input class="input" type="text" :value="param.key" readonly />
             </div>
             <div class="field has-addons">
               <p class="control">
-              <input
-                class="input"
-                type="text"
-                :value="param.value"
-                readonly
-              />
+                <input
+                  class="input"
+                  type="text"
+                  :value="param.value"
+                  readonly
+                />
               </p>
               <p class="control">
-                <a 
-                  class="button is-danger"
-                  @click="deleteHostVar(index)"
-                >
+                <a class="button is-danger" @click="deleteHostVar(index)">
                   delete
                 </a>
               </p>
@@ -171,10 +168,8 @@
 <script>
 import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { Api } from '../../servcies/api'
-
-const groupApi = new Api('group')
-const hostApi = new Api('host')
+import hostApi from '../../servcies/inventory/host'
+import groupApi from '../../servcies/inventory/group'
 
 export default {
   name: 'HostCreate',
@@ -219,16 +214,14 @@ export default {
 
     const addHostVar = () => {
       console.log(hostVars.value)
-      hostVars.value.push(
-        {
-          'key': keyModel.value,
-          'value': valueModel.value
-        }
-      )
+      hostVars.value.push({
+        key: keyModel.value,
+        value: valueModel.value,
+      })
       console.log(hostVars.value)
     }
 
-    const deleteHostVar = index => hostVars.value.splice(index, 1)
+    const deleteHostVar = (index) => hostVars.value.splice(index, 1)
 
     const createHost = async () => {
       createLoding.value = true
@@ -237,8 +230,8 @@ export default {
       }
       let vals = {
         hostname: hostnameModel.value,
-        ...(groupId.value && {group_id: groupId.value}),
-        ...(hostVars.value.length && {hostvars: hostVars.value})
+        ...(groupId.value && { group_id: groupId.value }),
+        ...(hostVars.value.length && { hostvars: hostVars.value }),
       }
       let newHost = await hostApi.create(vals)
       console.log(newHost)
@@ -257,11 +250,11 @@ export default {
       groupModelRO,
       hostVars,
       addHostVar,
-      deleteHostVar: index => hostVars.value.splice(index, 1),
+      deleteHostVar: (index) => hostVars.value.splice(index, 1),
       keyModel,
       valueModel,
       createHost,
-      createLoding
+      createLoding,
     }
   },
 }
