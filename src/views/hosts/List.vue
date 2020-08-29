@@ -36,7 +36,7 @@
           <a>With group</a>
         </p> -->
         <p class="level-item">
-          <router-link :to="{ name: 'HostCreate' }" class="button"
+          <router-link :to="{ name: 'HostCreate' }" class="button is-primary"
             >Create</router-link
           >
         </p>

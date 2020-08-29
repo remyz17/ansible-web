@@ -38,7 +38,9 @@
           <a>With parent</a>
         </p> -->
         <p class="level-item">
-          <a class="button">New</a>
+          <router-link :to="{ name: 'GroupCreate' }" class="button is-primary"
+            >Create</router-link
+          >
         </p>
       </div>
     </nav>

@@ -2,10 +2,10 @@
   <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li>
-        <router-link to="/inventory/hosts">Host inventory</router-link>
+        <router-link to="/inventory/groups">Group inventory</router-link>
       </li>
       <li class="is-active">
-        <router-link :to="{ name: 'HostCreate' }">New item</router-link>
+        <router-link :to="{ name: 'GroupCreate' }">New item</router-link>
       </li>
     </ul>
   </nav>
@@ -13,13 +13,13 @@
     <nav class="level">
       <div class="level-left">
         <div class="level-item">
-          <p class="subtitle is-5"><strong>Host</strong> create</p>
+          <p class="subtitle is-5"><strong>Group</strong> create</p>
         </div>
       </div>
 
       <div class="level-right">
         <p class="level-item">
-          <router-link :to="{ name: 'Hosts' }" class="button"
+          <router-link :to="{ name: 'Groups' }" class="button"
             >Cancel</router-link
           >
         </p>
@@ -36,13 +36,13 @@
     <div class="columns">
       <div class="column is-4 is-12-mobile">
         <div class="field">
-          <label class="label">Hostname</label>
+          <label class="label">Name</label>
           <div class="control">
             <input
               class="input is-small"
               type="text"
-              placeholder="Hostname"
-              v-model="hostnameModel"
+              placeholder="Name"
+              v-model="nameModel"
             />
           </div>
         </div>
@@ -55,22 +55,22 @@
                 class="input is-small"
                 type="text"
                 placeholder="Group"
-                v-model="groupModel"
-                :readonly="groupModelRO"
+                v-model="parentModel"
+                :readonly="parentModelRO"
                 @input="debouceSearch($event.target.value)"
-                @dblclick="unsetGroup"
+                @dblclick="unsetParent"
               />
               <!-- @blur="onBlurGroup" this make the @click="setGroup(group)" uncallable -->
             </div>
             <div class="dropdown-menu w100" id="dropdown-menu3" role="menu">
               <div class="dropdown-content">
                 <a
-                  v-for="group in data"
-                  :key="group.id"
+                  v-for="parent in data"
+                  :key="parent.id"
                   class="dropdown-item"
-                  @click="setGroup(group)"
+                  @click="setGroup(parent)"
                 >
-                  {{ group.name }}
+                  {{ parent.name }}
                 </a>
                 <hr class="dropdown-divider" />
                 <router-link to="/inventory/group/create" class="dropdown-item">
@@ -113,14 +113,14 @@
                 />
               </p>
               <p class="control">
-                <a class="button is-small" @click="addHostVar"> Add </a>
+                <a class="button is-small" @click="addGroupVar"> Add </a>
               </p>
             </div>
           </div>
         </div>
         <div
-          v-show="hostVars.length > 0"
-          v-for="(param, index) in hostVars"
+          v-show="groupVars.length > 0"
+          v-for="(param, index) in groupVars"
           :key="param.key"
           class="field is-horizontal"
         >
@@ -145,7 +145,7 @@
               <p class="control">
                 <a
                   class="button is-danger is-small"
-                  @click="deleteHostVar(index)"
+                  @click="deleteGroupVar(index)"
                 >
                   delete
                 </a>
@@ -174,11 +174,11 @@ export default {
   name: 'HostCreate',
   async setup() {
     let router = useRouter()
-    let hostnameModel = ref('')
-    let groupModel = ref('')
-    let groupModelRO = ref(false)
-    let groupId = ref('')
-    let hostVars = ref([])
+    let nameModel = ref('')
+    let parentModel = ref('')
+    let parentModelRO = ref(false)
+    let parentId = ref('')
+    let groupVars = ref([])
     let keyModel = ref('')
     let valueModel = ref('')
     let payload = ref([])
@@ -200,53 +200,53 @@ export default {
 
     const setGroup = (group) => {
       console.log('group set', group)
-      groupModel.value = group.name
-      groupId.value = group.id
-      groupModelRO.value = true
+      parentModel.value = group.name
+      parentId.value = group.id
+      parentModelRO.value = true
       searchActive.value = false
     }
 
     const unsetGroup = () => {
-      groupId.value = ''
-      groupModelRO.value = false
+      parentId.value = ''
+      parentModelRO.value = false
     }
 
-    const addHostVar = () => {
-      console.log(hostVars.value)
-      hostVars.value.push({
+    const addGroupVar = () => {
+      console.log(groupVars.value)
+      groupVars.value.push({
         key: keyModel.value,
         value: valueModel.value,
       })
-      console.log(hostVars.value)
+      console.log(groupVars.value)
     }
 
-    const deleteHostVar = (index) => hostVars.value.splice(index, 1)
+    const deleteGroupVar = (index) => groupVars.value.splice(index, 1)
 
     const createHost = async () => {
       createLoding.value = true
       let vals = {
-        hostname: hostnameModel.value,
-        ...(groupId.value && { group_id: groupId.value }),
-        ...(hostVars.value.length && { hostvars: hostVars.value }),
+        name: nameModel.value,
+        ...(parentId.value && { parent_id: parentId.value }),
+        ...(groupVars.value.length && { groupvars: groupVars.value }),
       }
-      let newHost = await hostApi.create(vals)
-      console.log(newHost)
+      let newGroup = await groupApi.create(vals)
+      console.log(newGroup)
       createLoding.value = false
-      router.push({ name: 'Host', params: { id: newHost.id } })
+      router.push({ name: 'Group', params: { id: newGroup.id } })
     }
 
     return {
       data: computed(() => payload.value),
-      hostnameModel,
-      groupModel,
+      nameModel,
+      parentModel,
       debouceSearch,
       searchActive,
       setGroup,
       unsetGroup,
-      groupModelRO,
-      hostVars,
-      addHostVar,
-      deleteHostVar: (index) => hostVars.value.splice(index, 1),
+      parentModelRO,
+      groupVars,
+      addGroupVar,
+      deleteGroupVar: (index) => groupVars.value.splice(index, 1),
       keyModel,
       valueModel,
       createHost,

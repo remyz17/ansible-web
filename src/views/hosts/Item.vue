@@ -1,9 +1,8 @@
 <template>
-  <h2 class="subtitle"><strong>Host</strong> item</h2>
   <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
     <ul>
       <li>
-        <router-link to="/inventory/hosts">Hosts inventory</router-link>
+        <router-link to="/inventory/hosts">Host inventory</router-link>
       </li>
       <li class="is-active">
         <router-link :to="{ name: 'Host', params: { id: hostData.id } }">{{
@@ -16,19 +15,15 @@
     <nav class="level">
       <div class="level-left">
         <div class="level-item">
-          <p class="subtitle is-5"><strong>Host</strong> item</p>
+          <p class="subtitle is-5"><strong>Host</strong> {{ hostData.id }}</p>
         </div>
       </div>
 
       <div class="level-right">
-        <p class="level-item">
-          <router-link
-            :to="{ name: 'Host', params: { id: hostData.id } }"
-            class="button"
-            >Edit</router-link
-          >
+        <p class="level-item" v-if="!isEditing">
+          <a @click="handleEdit" class="button">Edit</a>
         </p>
-        <p class="level-item">
+        <p class="level-item" v-if="!isEditing">
           <a
             class="button is-danger"
             :class="{ 'is-loading': deletePending }"
@@ -37,51 +32,97 @@
             Delete
           </a>
         </p>
+        <p class="level-item" v-if="isEditing">
+          <a @click="handleEdit" class="button">Cancel</a>
+        </p>
+        <p class="level-item" v-if="isEditing">
+          <a @click="saveEdit" class="button is-primary">Save</a>
+        </p>
       </div>
     </nav>
     <div class="columns">
-      <div class="column">
-        <p>
-          <strong>ID:</strong>
-          {{ hostData.id }}
-        </p>
-        <p>
-          <strong>Hostname:</strong>
-          {{ hostData.hostname }}
-        </p>
-        <p v-if="hostData.group">
-          <strong>Group: </strong>
-          <router-link
-            :to="{ name: 'Group', params: { id: hostData.group_id } }"
-            >{{ hostData.group.name }}</router-link
-          >
-        </p>
+      <div class="column is-one-third">
+        <div class="field">
+          <label class="label">Hostname</label>
+          <div class="control" v-if="isEditing">
+            <input
+              class="input is-small"
+              type="text"
+              :value="hostData.hostname"
+            />
+          </div>
+          <div class="control" v-else="">
+            <p>{{ hostData.hostname }}</p>
+          </div>
+        </div>
+
+        <div v-if="hostData.group" class="field">
+          <label class="label">Group</label>
+          <div class="control" v-if="isEditing">
+            <input
+              class="input is-small"
+              type="text"
+              :value="hostData.group.name"
+            />
+          </div>
+          <div class="control" v-else="">
+            <router-link
+              :to="{ name: 'Group', params: { id: hostData.group_id } }"
+              >{{ hostData.group.name }}</router-link
+            >
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="columns">
       <div class="column">
-        <table
-          class="table is-hoverable"
+        <div class="tabs">
+          <ul>
+            <li class="is-active"><a>Variables</a></li>
+            <li><a>Jobs</a></li>
+            <li><a>All groups</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-half is-mobile">
+        <div
           v-if="hostData.hostvars && hostData.hostvars.length > 0"
+          v-for="(_var, index) in hostData.hostvars"
+          :key="index"
+          class="field is-horizontal"
         >
-          <thead>
-            <tr>
-              <th>Key</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(_var, index) in hostData.hostvars" :key="index">
-              <td>{{ _var.key }}</td>
-              <td>{{ _var.value }}</td>
-            </tr>
-          </tbody>
-        </table>
+          <div class="field-body">
+            <div class="field">
+              <input
+                class="input is-small"
+                :class="{ 'is-static': !isEditing }"
+                type="text"
+                :value="_var.key"
+                :readonly="!isEditing"
+              />
+            </div>
+            <div class="field has-addons">
+              <p class="control">
+                <input
+                  class="input is-small"
+                  :class="{ 'is-static': !isEditing }"
+                  type="text"
+                  :value="_var.value"
+                  :readonly="!isEditing"
+                />
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { watchEffect, ref, onMounted } from 'vue'
+import { watchEffect, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import hostApi from '../../servcies/inventory/host'
 
@@ -92,13 +133,13 @@ export default {
     let route = useRoute()
     let hostData = ref([])
     let deletePending = ref(false)
+    let isEditing = ref(false)
 
-    /* watch(route, async () => {
-      console.log('watch trigger')
-      hostData.value = await api.get(route.params.id)
-    }) */
+    const fetchHost = async (id) => {
+      hostData.value = await hostApi.get(id)
+    }
 
-    watchEffect(() => console.log('trigger', route))
+    watchEffect(async () => await fetchHost(route.params.id))
 
     const handleDelete = async () => {
       deletePending.value = true
@@ -107,11 +148,16 @@ export default {
       router.push('/inventory/hosts')
     }
 
-    hostData.value = await hostApi.get(route.params.id)
+    const handleEdit = () => (isEditing.value = !isEditing.value)
+    const saveEdit = () => ''
+
     return {
       hostData,
       deletePending,
       handleDelete,
+      isEditing,
+      handleEdit,
+      saveEdit,
     }
   },
 }
