@@ -1,26 +1,26 @@
 <template>
   <Header />
   <main id="main">
-      <Suspense>
-        <template #default>
-          <!-- <router-view v-slot="{ Component }">
+    <Suspense>
+      <template #default>
+        <!-- <router-view v-slot="{ Component }">
             <transition name="fade" mode="out-in">
               <keep-alive>
                 <component :is="Component" />
               </keep-alive>
             </transition>
           </router-view> -->
-          <router-view/>
-        </template>
-        <template #fallback>
-          <div class="hero-body">
-            <div class="container has-text-centered">
-              <!-- <h1 class="title">Loading data</h1> -->
-              <img id="loader" src="./assets/loader.svg" />
-            </div>
+        <router-view />
+      </template>
+      <template #fallback>
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <!-- <h1 class="title">Loading data</h1> -->
+            <img id="loader" src="./assets/loader.svg" />
           </div>
-        </template>
-      </Suspense>
+        </div>
+      </template>
+    </Suspense>
   </main>
   <Footer />
 </template>
@@ -44,14 +44,14 @@
 </style>
 
 <script>
-import Header from "/@/components/Header.vue";
-import Footer from "/@/components/Footer.vue";
+import Header from '/@/components/Header.vue'
+import Footer from '/@/components/Footer.vue'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Header,
-    Footer
-  }
-};
+    Footer,
+  },
+}
 </script>

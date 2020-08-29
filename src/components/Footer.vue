@@ -1,9 +1,7 @@
 <template>
   <footer class="footer">
     <div class="content has-text-centered">
-      <p>
-        Ansible Web | Remy Zulauff
-      </p>
+      <p>Ansible Web | Remy Zulauff</p>
     </div>
   </footer>
 </template>

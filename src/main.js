@@ -4,7 +4,4 @@ import router from '/@/router'
 import store from '/@/store'
 import '/@/assets/index.scss'
 
-createApp(App)
-  .use(router)
-  .use(store)
-  .mount('#app')
+createApp(App).use(router).use(store).mount('#app')

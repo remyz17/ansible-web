@@ -17,9 +17,7 @@
 
     <div class="navbar-menu" :class="[menuOpen ? 'is-active' : '']">
       <div class="navbar-end">
-        <router-link class="navbar-item" to="/">
-          Dashboard
-        </router-link>
+        <router-link class="navbar-item" to="/"> Dashboard </router-link>
         <div class="navbar-item has-dropdown is-hoverable">
           <router-link class="navbar-link" to="/inventory">
             Inventory

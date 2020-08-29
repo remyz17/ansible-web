@@ -1,10 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import( '/@/views/Home.vue')
+    component: () => import('/@/views/Home.vue'),
   },
   {
     path: '/inventory',
@@ -14,7 +14,7 @@ const routes = [
       {
         path: 'hosts',
         name: 'Hosts',
-        component: () => import('/@/views/hosts/List.vue')
+        component: () => import('/@/views/hosts/List.vue'),
       },
       {
         path: 'host/:id',
@@ -31,12 +31,12 @@ const routes = [
       {
         path: 'host/create',
         name: 'HostCreate',
-        component: () => import('/@/views/hosts/Create.vue')
+        component: () => import('/@/views/hosts/Create.vue'),
       },
       {
         path: 'groups',
         name: 'Groups',
-        component: () => import('/@/views/groups/List.vue')
+        component: () => import('/@/views/groups/List.vue'),
       },
       {
         path: 'group/:id',
@@ -49,18 +49,23 @@ const routes = [
             component: () => import('/@/views/groups/GroupEdit.vue')
           }
         ] */
-      }
-    ]
+      },
+      {
+        path: 'group/create',
+        name: 'GroupCreate',
+        component: () => import('/@/views/groups/Create.vue'),
+      },
+    ],
   },
   {
     path: '/:catchAll(.*)',
-    component: () => import('/@/views/404.vue')
-  }
+    component: () => import('/@/views/404.vue'),
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 })
 
 export default router
