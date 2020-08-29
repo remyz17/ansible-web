@@ -1,134 +1,140 @@
 <template>
-  <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
-    <ul>
-      <li>
-        <router-link to="/inventory/hosts">Host inventory</router-link>
-      </li>
-      <li class="is-active">
-        <router-link :to="{ name: 'Host', params: { id: hostData.id } }">{{
-          hostData.hostname
-        }}</router-link>
-      </li>
-    </ul>
-  </nav>
-  <div class="box">
-    <nav class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <p class="subtitle is-5"><strong>Host</strong> {{ hostData.id }}</p>
-        </div>
-      </div>
-
-      <div class="level-right">
-        <p class="level-item" v-if="!isEditing">
-          <a @click="handleEdit" class="button">Edit</a>
-        </p>
-        <p class="level-item" v-if="!isEditing">
-          <a
-            class="button is-danger"
-            :class="{ 'is-loading': deletePending }"
-            @click="handleDelete"
-          >
-            Delete
-          </a>
-        </p>
-        <p class="level-item" v-if="isEditing">
-          <a @click="handleEdit" class="button">Cancel</a>
-        </p>
-        <p class="level-item" v-if="isEditing">
-          <a @click="saveEdit" class="button is-primary">Save</a>
-        </p>
-      </div>
-    </nav>
-    <div class="columns">
-      <div class="column is-one-third">
-        <div class="field">
-          <label class="label">Hostname</label>
-          <div class="control" v-if="isEditing">
-            <input
-              class="input is-small"
-              type="text"
-              :value="hostData.hostname"
-            />
-          </div>
-          <div class="control" v-else="">
-            <p>{{ hostData.hostname }}</p>
-          </div>
-        </div>
-
-        <div v-if="hostData.group" class="field">
-          <label class="label">Group</label>
-          <div class="control" v-if="isEditing">
-            <input
-              class="input is-small"
-              type="text"
-              :value="hostData.group.name"
-            />
-          </div>
-          <div class="control" v-else="">
-            <router-link
-              :to="{ name: 'Group', params: { id: hostData.group_id } }"
-              >{{ hostData.group.name }}</router-link
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <div class="tabs">
-          <ul>
-            <li class="is-active"><a>Variables</a></li>
-            <li><a>Jobs</a></li>
-            <li><a>All groups</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column is-half is-mobile">
-        <div
-          v-if="hostData.hostvars && hostData.hostvars.length > 0"
-          v-for="(_var, index) in hostData.hostvars"
-          :key="index"
-          class="field is-horizontal"
-        >
-          <div class="field-body">
-            <div class="field">
-              <input
-                class="input is-small"
-                :class="{ 'is-static': !isEditing }"
-                type="text"
-                :value="_var.key"
-                :readonly="!isEditing"
-              />
-            </div>
-            <div class="field has-addons">
-              <p class="control">
-                <input
-                  class="input is-small"
-                  :class="{ 'is-static': !isEditing }"
-                  type="text"
-                  :value="_var.value"
-                  :readonly="!isEditing"
-                />
+  <section class="section">
+    <div class="container">
+      <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+        <ul>
+          <li>
+            <router-link to="/inventory/hosts">Host inventory</router-link>
+          </li>
+          <li class="is-active">
+            <router-link :to="{ name: 'Host', params: { id: hostData.id } }">{{
+              hostData.hostname
+            }}</router-link>
+          </li>
+        </ul>
+      </nav>
+      <div class="box">
+        <nav class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <p class="subtitle is-5">
+                <strong>Host</strong> {{ hostData.id }}
               </p>
             </div>
           </div>
+
+          <div class="level-right">
+            <p class="level-item" v-if="!isEditing">
+              <a @click="handleEdit" class="button">Edit</a>
+            </p>
+            <p class="level-item" v-if="!isEditing">
+              <a
+                class="button is-danger"
+                :class="{ 'is-loading': deletePending }"
+                @click="handleDelete"
+              >
+                Delete
+              </a>
+            </p>
+            <p class="level-item" v-if="isEditing">
+              <a @click="handleEdit" class="button">Cancel</a>
+            </p>
+            <p class="level-item" v-if="isEditing">
+              <a @click="saveEdit" class="button is-primary">Save</a>
+            </p>
+          </div>
+        </nav>
+        <div class="columns">
+          <div class="column is-one-third">
+            <div class="field">
+              <label class="label">Hostname</label>
+              <div class="control" v-if="isEditing">
+                <input
+                  class="input is-small"
+                  type="text"
+                  :value="hostData.hostname"
+                />
+              </div>
+              <div class="control" v-else="">
+                <p>{{ hostData.hostname }}</p>
+              </div>
+            </div>
+
+            <div v-if="hostData.group" class="field">
+              <label class="label">Group</label>
+              <div class="control" v-if="isEditing">
+                <input
+                  class="input is-small"
+                  type="text"
+                  :value="hostData.group.name"
+                />
+              </div>
+              <div class="control" v-else="">
+                <router-link
+                  :to="{ name: 'Group', params: { id: hostData.group_id } }"
+                  >{{ hostData.group.name }}</router-link
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="tabs">
+              <ul>
+                <li class="is-active"><a>Variables</a></li>
+                <li><a>Jobs</a></li>
+                <li><a>All groups</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-half is-mobile">
+            <div
+              v-if="hostData.hostvars && hostData.hostvars.length > 0"
+              v-for="(_var, index) in hostData.hostvars"
+              :key="index"
+              class="field is-horizontal"
+            >
+              <div class="field-body">
+                <div class="field">
+                  <input
+                    class="input is-small"
+                    :class="{ 'is-static': !isEditing }"
+                    type="text"
+                    :value="_var.key"
+                    :readonly="!isEditing"
+                  />
+                </div>
+                <div class="field has-addons">
+                  <p class="control">
+                    <input
+                      class="input is-small"
+                      :class="{ 'is-static': !isEditing }"
+                      type="text"
+                      :value="_var.value"
+                      :readonly="!isEditing"
+                    />
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
-import { watchEffect, ref } from 'vue'
+import { watchEffect, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import hostApi from '../../servcies/inventory/host'
 
 export default {
   name: 'Host',
-  async setup() {
+  setup() {
     let router = useRouter()
     let route = useRoute()
     let hostData = ref([])
@@ -138,6 +144,8 @@ export default {
     const fetchHost = async (id) => {
       hostData.value = await hostApi.get(id)
     }
+
+    /* onMounted(async () => await fetchHost(route.params.id)) */
 
     watchEffect(async () => await fetchHost(route.params.id))
 

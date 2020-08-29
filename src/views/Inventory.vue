@@ -1,8 +1,6 @@
 <template>
   <section class="section">
-    <div class="container">
-      <router-view />
-    </div>
+    <div class="container"></div>
   </section>
 </template>
 
