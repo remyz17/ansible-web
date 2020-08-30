@@ -44,7 +44,7 @@
                   class="input is-small"
                   type="text"
                   placeholder="Name"
-                  v-model="nameModel"
+                  v-model="modelState.name"
                 />
               </div>
             </div>
@@ -57,20 +57,20 @@
                     class="input is-small"
                     type="text"
                     placeholder="Group"
-                    v-model="parentModel"
-                    :readonly="parentModelRO"
-                    @input="debouceSearch($event.target.value)"
+                    v-model="modelState.parent"
+                    :readonly="modelState.parentRO"
+                    @input="searchGroup($event.target.value)"
                     @dblclick="unsetParent"
                   />
-                  <!-- @blur="onBlurGroup" this make the @click="setGroup(group)" uncallable -->
+                  <!-- @blur="onBlurGroup" this make the @click="setParent(group)" uncallable -->
                 </div>
                 <div class="dropdown-menu w100" id="dropdown-menu3" role="menu">
                   <div class="dropdown-content">
                     <a
-                      v-for="parent in data"
+                      v-for="parent in searchResults"
                       :key="parent.id"
                       class="dropdown-item"
-                      @click="setGroup(parent)"
+                      @click="setParent(parent)"
                     >
                       {{ parent.name }}
                     </a>
@@ -105,7 +105,7 @@
                     class="input is-small"
                     type="text"
                     placeholder="Key"
-                    v-model="keyModel"
+                    v-model="modelState.keyVar"
                   />
                 </div>
                 <div class="field has-addons">
@@ -114,7 +114,7 @@
                       class="input is-small"
                       type="text"
                       placeholder="Value"
-                      v-model="valueModel"
+                      v-model="modelState.valueVar"
                     />
                   </p>
                   <p class="control">
@@ -124,8 +124,8 @@
               </div>
             </div>
             <div
-              v-show="groupVars.length > 0"
-              v-for="(param, index) in groupVars"
+              v-show="modelState.groupVars.length > 0"
+              v-for="(param, index) in modelState.groupVars"
               :key="param.key"
               class="field is-horizontal"
             >
@@ -181,81 +181,75 @@ export default {
   name: 'HostCreate',
   setup() {
     let router = useRouter()
-    let nameModel = ref('')
-    let parentModel = ref('')
-    let parentModelRO = ref(false)
-    let parentId = ref('')
-    let groupVars = ref([])
-    let keyModel = ref('')
-    let valueModel = ref('')
-    let payload = ref([])
+    let modelState = reactive({
+      name: '',
+      parent: '',
+      parentId: '',
+      parentRO: false,
+      groupVars: [],
+      keyVar: '',
+      valueVar: '',
+    })
+    let groupsData = ref([])
     let searchActive = ref(false)
     let createLoding = ref(false)
     let timeoutRef = null
 
-    const debouceSearch = (query) => {
-      if (query == '') return
-      if (timeoutRef !== null) {
-        clearTimeout(timeoutRef)
+    const searchResults = computed(() => groupsData.value)
+
+    const searchGroup = (query) => {
+      if (query == '') {
+        searchActive.value = false
+        return
       }
+      if (timeoutRef !== null) clearTimeout(timeoutRef)
       timeoutRef = setTimeout(async () => {
-        payload.value = await groupApi.search(query)
+        groupsData.value = await groupApi.search(query)
         searchActive.value = true
-        console.log(payload.value)
       }, 200)
     }
 
-    const setGroup = (group) => {
-      console.log('group set', group)
-      parentModel.value = group.name
-      parentId.value = group.id
-      parentModelRO.value = true
+    const setParent = (group) => {
+      modelState.parent = group.name
+      modelState.parentId = group.id
+      modelState.parentRO = true
       searchActive.value = false
     }
 
-    const unsetGroup = () => {
-      parentId.value = ''
-      parentModelRO.value = false
+    const unsetParent = () => {
+      modelState.parentId = ''
+      modelState.parentRO = false
     }
 
     const addGroupVar = () => {
-      console.log(groupVars.value)
-      groupVars.value.push({
-        key: keyModel.value,
-        value: valueModel.value,
+      modelState.groupVars.push({
+        key: modelState.keyVar,
+        value: modelState.valueVar,
       })
-      console.log(groupVars.value)
     }
 
-    const deleteGroupVar = (index) => groupVars.value.splice(index, 1)
+    const deleteGroupVar = (index) => modelState.groupVars.splice(index, 1)
 
     const createHost = async () => {
       createLoding.value = true
-      let vals = {
-        name: nameModel.value,
-        ...(parentId.value && { parent_id: parentId.value }),
-        ...(groupVars.value.length && { groupvars: groupVars.value }),
-      }
-      let newGroup = await groupApi.create(vals)
-      console.log(newGroup)
+      let newGroup = await groupApi.create({
+        name: modelState.name,
+        ...(modelState.parentId && { parent_id: modelState.parentId }),
+        ...(modelState.groupVars.length && { groupvars: modelState.groupVars }),
+      })
       createLoding.value = false
       router.push({ name: 'Group', params: { id: newGroup.id } })
     }
 
     return {
-      data: computed(() => payload.value),
-      nameModel,
-      parentModel,
-      debouceSearch,
+      modelState,
+      searchResults,
+      searchGroup,
       searchActive,
-      setGroup,
-      unsetGroup,
-      parentModelRO,
-      groupVars,
+      setParent,
+      unsetParent,
       addGroupVar,
-      deleteGroupVar: (index) => groupVars.value.splice(index, 1),
-      keyModel,
-      valueModel,
+      deleteGroupVar,
       createHost,
       createLoding,
     }

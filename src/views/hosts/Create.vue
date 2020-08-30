@@ -44,7 +44,7 @@
                   class="input is-small"
                   type="text"
                   placeholder="Hostname"
-                  v-model="hostnameModel"
+                  v-model="modelState.hostname"
                 />
               </div>
             </div>
@@ -57,9 +57,9 @@
                     class="input is-small"
                     type="text"
                     placeholder="Group"
-                    v-model="groupModel"
-                    :readonly="groupModelRO"
-                    @input="debouceSearch($event.target.value)"
+                    v-model="modelState.group"
+                    :readonly="modelState.groupRO"
+                    @input="searchGroup($event.target.value)"
                     @dblclick="unsetGroup"
                   />
                   <!-- @blur="onBlurGroup" this make the @click="setGroup(group)" uncallable -->
@@ -67,7 +67,7 @@
                 <div class="dropdown-menu w100" id="dropdown-menu3" role="menu">
                   <div class="dropdown-content">
                     <a
-                      v-for="group in data"
+                      v-for="group in searchResults"
                       :key="group.id"
                       class="dropdown-item"
                       @click="setGroup(group)"
@@ -105,7 +105,7 @@
                     class="input is-small"
                     type="text"
                     placeholder="Key"
-                    v-model="keyModel"
+                    v-model="modelState.keyVar"
                   />
                 </div>
                 <div class="field has-addons">
@@ -114,7 +114,7 @@
                       class="input is-small"
                       type="text"
                       placeholder="Value"
-                      v-model="valueModel"
+                      v-model="modelState.valueVar"
                     />
                   </p>
                   <p class="control">
@@ -124,8 +124,8 @@
               </div>
             </div>
             <div
-              v-show="hostVars.length > 0"
-              v-for="(param, index) in hostVars"
+              v-show="modelState.hostVars.length > 0"
+              v-for="(param, index) in modelState.hostVars"
               :key="param.key"
               class="field is-horizontal"
             >
@@ -181,81 +181,74 @@ export default {
   name: 'HostCreate',
   setup() {
     let router = useRouter()
-    let hostnameModel = ref('')
-    let groupModel = ref('')
-    let groupModelRO = ref(false)
-    let groupId = ref('')
-    let hostVars = ref([])
-    let keyModel = ref('')
-    let valueModel = ref('')
-    let payload = ref([])
+    let modelState = reactive({
+      hostname: '',
+      group: '',
+      groupRO: false,
+      hostVars: [],
+      keyVar: '',
+      valueVar: '',
+    })
+    let groupsData = ref([])
     let searchActive = ref(false)
     let createLoding = ref(false)
     let timeoutRef = null
 
-    const debouceSearch = (query) => {
-      if (query == '') return
-      if (timeoutRef !== null) {
-        clearTimeout(timeoutRef)
+    const searchResults = computed(() => groupsData.value)
+
+    const searchGroup = (query) => {
+      if (query == '') {
+        searchActive.value = false
+        return
       }
+      if (timeoutRef !== null) clearTimeout(timeoutRef)
       timeoutRef = setTimeout(async () => {
-        payload.value = await groupApi.search(query)
+        groupsData.value = await groupApi.search(query)
         searchActive.value = true
-        console.log(payload.value)
       }, 200)
     }
 
     const setGroup = (group) => {
-      console.log('group set', group)
-      groupModel.value = group.name
-      groupId.value = group.id
-      groupModelRO.value = true
+      modelState.group = group.name
+      modelState.groupId = group.id
+      modelState.groupRO = true
       searchActive.value = false
     }
 
     const unsetGroup = () => {
-      groupId.value = ''
-      groupModelRO.value = false
+      modelState.groupId = ''
+      modelState.groupModelRO = false
     }
 
     const addHostVar = () => {
-      console.log(hostVars.value)
-      hostVars.value.push({
-        key: keyModel.value,
-        value: valueModel.value,
+      modelState.hostVars.push({
+        key: modelState.keyVar,
+        value: modelState.valueVar,
       })
-      console.log(hostVars.value)
     }
 
-    const deleteHostVar = (index) => hostVars.value.splice(index, 1)
+    const deleteHostVar = (index) => modelState.hostVars.splice(index, 1)
 
     const createHost = async () => {
       createLoding.value = true
-      let vals = {
-        hostname: hostnameModel.value,
-        ...(groupId.value && { group_id: groupId.value }),
-        ...(hostVars.value.length && { hostvars: hostVars.value }),
-      }
-      let newHost = await hostApi.create(vals)
-      console.log(newHost)
+      let newHost = await hostApi.create({
+        hostname: modelState.hostname,
+        ...(modelState.groupId && { group_id: modelState.groupId }),
+        ...(modelState.hostVars.length && { hostvars: modelState.hostVars }),
+      })
       createLoding.value = false
       router.push({ name: 'Host', params: { id: newHost.id } })
     }
 
     return {
-      data: computed(() => payload.value),
-      hostnameModel,
-      groupModel,
-      debouceSearch,
+      modelState,
+      searchResults,
+      searchGroup,
       searchActive,
       setGroup,
       unsetGroup,
-      groupModelRO,
-      hostVars,
       addHostVar,
-      deleteHostVar: (index) => hostVars.value.splice(index, 1),
-      keyModel,
-      valueModel,
+      deleteHostVar,
       createHost,
       createLoding,
     }
