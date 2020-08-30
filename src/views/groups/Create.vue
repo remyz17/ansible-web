@@ -42,11 +42,16 @@
               <div class="control">
                 <input
                   class="input is-small"
+                  :class="{ 'is-danger': modelState.nameErr }"
                   type="text"
                   placeholder="Name"
+                  @input="modelState.nameErr = flase"
                   v-model="modelState.name"
                 />
               </div>
+              <p v-if="modelState.nameErr" class="help is-danger">
+                Name is required !
+              </p>
             </div>
 
             <div class="field">
@@ -183,6 +188,7 @@ export default {
     let router = useRouter()
     let modelState = reactive({
       name: '',
+      nameErr: '',
       parent: '',
       parentId: '',
       parentRO: false,
@@ -231,6 +237,11 @@ export default {
     const deleteGroupVar = (index) => modelState.groupVars.splice(index, 1)
 
     const createHost = async () => {
+      if (modelState.name == '') {
+        modelState.nameErr = true
+        return
+      }
+      modelState.nameErr = false
       createLoding.value = true
       let newGroup = await groupApi.create({
         name: modelState.name,

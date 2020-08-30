@@ -42,11 +42,16 @@
               <div class="control">
                 <input
                   class="input is-small"
+                  :class="{ 'is-danger': modelState.hostnameErr }"
                   type="text"
                   placeholder="Hostname"
+                  @input="modelState.hostnameErr = flase"
                   v-model="modelState.hostname"
                 />
               </div>
+              <p v-if="modelState.hostnameErr" class="help is-danger">
+                Hostname is required !
+              </p>
             </div>
 
             <div class="field">
@@ -183,6 +188,7 @@ export default {
     let router = useRouter()
     let modelState = reactive({
       hostname: '',
+      hostnameErr: false,
       group: '',
       groupRO: false,
       hostVars: [],
@@ -230,6 +236,11 @@ export default {
     const deleteHostVar = (index) => modelState.hostVars.splice(index, 1)
 
     const createHost = async () => {
+      if (modelState.hostname == '') {
+        modelState.hostnameErr = true
+        return
+      }
+      modelState.hostnameErr = false
       createLoding.value = true
       let newHost = await hostApi.create({
         hostname: modelState.hostname,
