@@ -98,16 +98,23 @@
               class="field is-horizontal"
             >
               <div class="field-body">
-                <div class="field">
-                  <input
-                    class="input is-small"
-                    :class="{ 'is-static': !isEditing }"
-                    type="text"
-                    :value="_var.key"
-                    :readonly="!isEditing"
-                  />
+                <div class="field" :class="{ ' has-addons': isEditing }">
+                  <p class="control">
+                    <input
+                      class="input is-small"
+                      :class="{ 'is-static': !isEditing }"
+                      type="text"
+                      :value="_var.key"
+                      :readonly="!isEditing"
+                      @input="handleKeyChange($event.target.value, index)"
+                    />
+                  </p>
+                  <p v-if="isEditing" class="control">
+                    <a class="button is-small"> save </a>
+                  </p>
                 </div>
-                <div class="field has-addons">
+
+                <div class="field" :class="{ ' has-addons': isEditing }">
                   <p class="control">
                     <input
                       class="input is-small"
@@ -115,7 +122,11 @@
                       type="text"
                       :value="_var.value"
                       :readonly="!isEditing"
+                      @input="handleValueChange($event.target.value, index)"
                     />
+                  </p>
+                  <p v-if="isEditing" class="control">
+                    <a class="button is-small"> save </a>
                   </p>
                 </div>
               </div>
@@ -128,7 +139,7 @@
 </template>
 
 <script>
-import { watchEffect, ref, onMounted } from 'vue'
+import { watchEffect, ref, onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import hostApi from '../../servcies/inventory/host'
 
@@ -138,6 +149,12 @@ export default {
     let router = useRouter()
     let route = useRoute()
     let hostData = ref([])
+    let editState = reactive({
+      hostname: '',
+      group: '',
+      group_id: '',
+      hostvars: [],
+    })
     let deletePending = ref(false)
     let isEditing = ref(false)
 
@@ -156,8 +173,20 @@ export default {
       router.push('/inventory/hosts')
     }
 
-    const handleEdit = () => (isEditing.value = !isEditing.value)
-    const saveEdit = () => ''
+    const handleEdit = () => {
+      editState.hostname
+      isEditing.value = !isEditing.value
+    }
+    const saveEdit = () => {
+      console.log('tigger save')
+      console.log(hostData.value)
+    }
+
+    const handleKeyChange = (val, index) =>
+      (hostData.value.hostvars[index].key = val)
+
+    const handleValueChange = (val, index) =>
+      (hostData.value.hostvars[index].value = val)
 
     return {
       hostData,
@@ -166,6 +195,8 @@ export default {
       isEditing,
       handleEdit,
       saveEdit,
+      handleKeyChange,
+      handleValueChange,
     }
   },
 }
