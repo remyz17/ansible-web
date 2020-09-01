@@ -64,7 +64,13 @@
                 >
                   <td>{{ host.id }}</td>
                   <td>{{ host.hostname }}</td>
-                  <td>{{ host.group ? host.group.name : '' }}</td>
+                  <td @click.stop v-if="host.group_id">
+                    <router-link
+                      :to="{ name: 'Group', params: { id: host.group_id } }"
+                      >{{ host.group.name }}</router-link
+                    >
+                  </td>
+                  <td v-else=""></td>
                 </tr>
               </tbody>
             </table>
