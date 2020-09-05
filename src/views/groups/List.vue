@@ -86,7 +86,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import groupApi from '../../servcies/inventory/group'
+import groupApi from '/@/servcies/inventory/group.js'
 
 export default {
   name: 'Groups',

@@ -1,6 +1,7 @@
 class Api {
-  constructor(baseUrl) {
-    this.baseUrl = `/api/${baseUrl}`
+  #baseUrl
+  constructor(ressource) {
+    this.baseUrl = `/api/${ressource}`
   }
 
   async _fetch(url, method, body = false) {

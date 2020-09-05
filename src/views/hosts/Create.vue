@@ -179,8 +179,8 @@
 <script>
 import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import hostApi from '../../servcies/inventory/host'
-import groupApi from '../../servcies/inventory/group'
+import hostApi from '/@/servcies/inventory/host.js'
+import groupApi from '/@/servcies/inventory/group.js'
 
 export default {
   name: 'HostCreate',

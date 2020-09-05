@@ -130,7 +130,7 @@
 <script>
 import { watchEffect, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import groupApi from '../../servcies/inventory/group'
+import groupApi from '/@/servcies/inventory/group.js'
 
 export default {
   name: 'Group',

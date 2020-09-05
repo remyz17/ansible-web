@@ -141,7 +141,7 @@
 <script>
 import { watchEffect, ref, onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import hostApi from '../../servcies/inventory/host'
+import hostApi from '/@/servcies/inventory/host.js'
 
 export default {
   name: 'Host',

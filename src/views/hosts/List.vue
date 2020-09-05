@@ -84,7 +84,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import hostApi from '../../servcies/inventory/host'
+import hostApi from '/@/servcies/inventory/host.js'
 
 export default {
   name: 'Hosts',
