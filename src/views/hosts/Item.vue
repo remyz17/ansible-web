@@ -37,7 +37,7 @@
               </a>
             </p>
             <p class="level-item" v-if="isEditing">
-              <a @click="handleEdit" class="button">Cancel</a>
+              <a @click="isEditing = false" class="button">Cancel</a>
             </p>
             <p class="level-item" v-if="isEditing">
               <a @click="saveEdit" class="button is-primary">Save</a>
@@ -52,7 +52,7 @@
                 <input
                   class="input is-small"
                   type="text"
-                  :value="hostData.hostname"
+                  v-model="hostData.hostname"
                 />
               </div>
               <div class="control" v-else="">
@@ -66,12 +66,12 @@
                 <input
                   class="input is-small"
                   type="text"
-                  :value="hostData.group.name"
+                  v-model="hostData.group.name"
                 />
               </div>
               <div class="control" v-else="">
                 <router-link
-                  :to="{ name: 'Group', params: { id: hostData.group_id } }"
+                  :to="{ name: 'Group', params: { id: hostData.group.id } }"
                   >{{ hostData.group.name }}</router-link
                 >
               </div>
@@ -104,13 +104,9 @@
                       class="input is-small"
                       :class="{ 'is-static': !isEditing }"
                       type="text"
-                      :value="_var.key"
+                      v-model="_var.key"
                       :readonly="!isEditing"
-                      @input="handleKeyChange($event.target.value, index)"
                     />
-                  </p>
-                  <p v-if="isEditing" class="control">
-                    <a class="button is-small"> save </a>
                   </p>
                 </div>
 
@@ -120,13 +116,9 @@
                       class="input is-small"
                       :class="{ 'is-static': !isEditing }"
                       type="text"
-                      :value="_var.value"
+                      v-model="_var.value"
                       :readonly="!isEditing"
-                      @input="handleValueChange($event.target.value, index)"
                     />
-                  </p>
-                  <p v-if="isEditing" class="control">
-                    <a class="button is-small"> save </a>
                   </p>
                 </div>
               </div>
@@ -149,12 +141,7 @@ export default {
     let router = useRouter()
     let route = useRoute()
     let hostData = ref([])
-    let editState = reactive({
-      hostname: '',
-      group: '',
-      group_id: '',
-      hostvars: [],
-    })
+    let editState = null
     let deletePending = ref(false)
     let isEditing = ref(false)
 
@@ -174,7 +161,6 @@ export default {
     }
 
     const handleEdit = () => {
-      editState.hostname
       isEditing.value = !isEditing.value
     }
     const saveEdit = () => {
