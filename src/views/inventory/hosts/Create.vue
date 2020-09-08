@@ -56,36 +56,45 @@
 
             <div class="field">
               <label class="label">Group</label>
-              <div class="dropdown w100" :class="{ 'is-active': searchActive }">
-                <div class="dropdown-trigger w100">
-                  <input
-                    class="input is-small"
-                    type="text"
-                    placeholder="Group"
-                    v-model="modelState.group"
-                    :readonly="modelState.groupRO"
-                    @input="searchGroup($event.target.value)"
-                    @dblclick="unsetGroup"
-                  />
-                  <!-- @blur="onBlurGroup" this make the @click="setGroup(group)" uncallable -->
-                </div>
-                <div class="dropdown-menu w100" id="dropdown-menu3" role="menu">
-                  <div class="dropdown-content">
-                    <a
-                      v-for="group in searchResults"
-                      :key="group.id"
-                      class="dropdown-item"
-                      @click="setGroup(group)"
-                    >
-                      {{ group.name }}
-                    </a>
-                    <hr class="dropdown-divider" />
-                    <router-link
-                      to="/inventory/group/create"
-                      class="dropdown-item"
-                    >
-                      Create
-                    </router-link>
+              <div class="control">
+                <div
+                  class="dropdown w100"
+                  :class="{ 'is-active': searchActive }"
+                >
+                  <div class="dropdown-trigger w100">
+                    <input
+                      class="input is-small"
+                      type="text"
+                      placeholder="Group"
+                      v-model="modelState.group"
+                      :readonly="modelState.groupRO"
+                      @input="searchGroup($event.target.value)"
+                      @dblclick="unsetGroup"
+                    />
+                    <!-- @blur="onBlurGroup" this make the @click="setGroup(group)" uncallable -->
+                  </div>
+                  <div
+                    class="dropdown-menu w100"
+                    id="dropdown-menu3"
+                    role="menu"
+                  >
+                    <div class="dropdown-content">
+                      <a
+                        v-for="group in searchResults"
+                        :key="group.id"
+                        class="dropdown-item"
+                        @click="setGroup(group)"
+                      >
+                        {{ group.name }}
+                      </a>
+                      <hr class="dropdown-divider" />
+                      <router-link
+                        to="/inventory/group/create"
+                        class="dropdown-item"
+                      >
+                        Create
+                      </router-link>
+                    </div>
                   </div>
                 </div>
               </div>

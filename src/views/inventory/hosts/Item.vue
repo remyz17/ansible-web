@@ -63,10 +63,16 @@
             <div v-if="hostData.group" class="field">
               <label class="label">Group</label>
               <div class="control" v-if="isEditing">
-                <input
+                <!-- <input
                   class="input is-small"
                   type="text"
                   v-model="hostData.group.name"
+                /> -->
+                <ReferenceField
+                  label="Group"
+                  model="group"
+                  @update-item="refUpdate"
+                  @delete-item="refDelete"
                 />
               </div>
               <div class="control" v-else="">
@@ -134,9 +140,13 @@
 import { watchEffect, ref, onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import hostApi from '/@/servcies/inventory/host.js'
+import ReferenceField from '../composable/ReferenceField.vue'
 
 export default {
   name: 'Host',
+  components: {
+    ReferenceField,
+  },
   setup() {
     let router = useRouter()
     let route = useRoute()
@@ -160,19 +170,24 @@ export default {
       router.push('/inventory/hosts')
     }
 
+    const refUpdate = (data) => {
+      hostData.value.group_id = data.id
+      hostData.value.group = data
+    }
+
+    const refDelete = () => {
+      hostData.value.group_id = null
+      hostData.value.group = null
+    }
+
     const handleEdit = () => {
       isEditing.value = !isEditing.value
     }
+
     const saveEdit = () => {
       console.log('tigger save')
       console.log(hostData.value)
     }
-
-    const handleKeyChange = (val, index) =>
-      (hostData.value.hostvars[index].key = val)
-
-    const handleValueChange = (val, index) =>
-      (hostData.value.hostvars[index].value = val)
 
     return {
       hostData,
@@ -181,8 +196,8 @@ export default {
       isEditing,
       handleEdit,
       saveEdit,
-      handleKeyChange,
-      handleValueChange,
+      refUpdate,
+      refDelete,
     }
   },
 }
