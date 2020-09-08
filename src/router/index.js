@@ -9,37 +9,37 @@ const routes = [
   {
     path: '/inventory',
     name: 'Inventory',
-    component: () => import('/@/views/Inventory.vue'),
+    component: () => import('/@/views/inventory/Inventory.vue'),
   },
   {
     path: '/inventory/hosts',
     name: 'Hosts',
-    component: () => import('/@/views/hosts/List.vue'),
+    component: () => import('/@/views/inventory/hosts/List.vue'),
   },
   {
     path: '/inventory/host/:id',
     name: 'Host',
-    component: () => import('/@/views/hosts/Item.vue'),
+    component: () => import('/@/views/inventory/hosts/Item.vue'),
   },
   {
     path: '/inventory/host/create',
     name: 'HostCreate',
-    component: () => import('/@/views/hosts/Create.vue'),
+    component: () => import('/@/views/inventory/hosts/Create.vue'),
   },
   {
     path: '/inventory/groups',
     name: 'Groups',
-    component: () => import('/@/views/groups/List.vue'),
+    component: () => import('/@/views/inventory/groups/List.vue'),
   },
   {
     path: '/inventory/group/:id',
     name: 'Group',
-    component: () => import('/@/views/groups/Item.vue'),
+    component: () => import('/@/views/inventory/groups/Item.vue'),
   },
   {
     path: '/inventory/group/create',
     name: 'GroupCreate',
-    component: () => import('/@/views/groups/Create.vue'),
+    component: () => import('/@/views/inventory/groups/Create.vue'),
   },
   {
     path: '/:catchAll(.*)',
