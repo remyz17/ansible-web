@@ -71,6 +71,7 @@
                 <ReferenceField
                   label="Group"
                   model="group"
+                  :initialVal="hostData.group.name"
                   @update-item="refUpdate"
                   @delete-item="refDelete"
                 />
@@ -126,6 +127,41 @@
                       :readonly="!isEditing"
                     />
                   </p>
+                  <p class="control" v-if="isEditing">
+                    <a
+                      class="button is-small is-danger"
+                      @click="delHostVar(index)"
+                    >
+                      Del
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div v-if="isEditing" class="field is-horizontal">
+              <div class="field-body">
+                <div class="field has-addons">
+                  <div class="control">
+                    <input
+                      class="input is-small"
+                      type="text"
+                      placeholder="Key"
+                      v-model="hostVarState.key"
+                    />
+                  </div>
+                </div>
+                <div class="field has-addons">
+                  <p class="control">
+                    <input
+                      class="input is-small"
+                      type="text"
+                      placeholder="Value"
+                      v-model="hostVarState.value"
+                    />
+                  </p>
+                  <p class="control">
+                    <a class="button is-small" @click="addHostVar"> Add </a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -154,6 +190,10 @@ export default {
     let editState = null
     let deletePending = ref(false)
     let isEditing = ref(false)
+    let hostVarState = reactive({
+      key: '',
+      value: '',
+    })
 
     const fetchHost = async (id) => {
       hostData.value = await hostApi.get(id)
@@ -171,6 +211,7 @@ export default {
     }
 
     const refUpdate = (data) => {
+      console.log('on update', data)
       hostData.value.group_id = data.id
       hostData.value.group = data
     }
@@ -184,10 +225,20 @@ export default {
       isEditing.value = !isEditing.value
     }
 
-    const saveEdit = () => {
+    const saveEdit = async () => {
       console.log('tigger save')
-      console.log(hostData.value)
+      console.log(hostData.value, hostData.value.id)
+      let res = await hostApi.update(hostData.value.id, hostData.value)
+      console.log(res)
+      isEditing.value = false
     }
+
+    const addHostVar = () =>
+      hostData.value.hostvars
+        ? hostData.value.hostvars.push({ ...hostVarState })
+        : (hostData.value.hostvars = [{ ...hostVarState }])
+
+    const delHostVar = (index) => hostData.value.hostvars.splice(index, 1)
 
     return {
       hostData,
@@ -198,6 +249,9 @@ export default {
       saveEdit,
       refUpdate,
       refDelete,
+      hostVarState,
+      addHostVar,
+      delHostVar,
     }
   },
 }

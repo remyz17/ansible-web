@@ -54,6 +54,10 @@ export default {
       type: String,
       required: true,
     },
+    initialVal: {
+      type: String,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     console.log(props)
@@ -63,7 +67,7 @@ export default {
     let fetchedData = ref([])
     let searchActive = ref(false)
     let modelState = reactive({
-      value: '',
+      value: props.initialVal,
       readonly: false,
     })
     let timeoutRef = null
@@ -86,12 +90,12 @@ export default {
       modelState.value = item.name
       modelState.readonly = true
       searchActive.value = false
-      emit('updateItem', item)
+      emit('update-item', item)
     }
 
     const unsetActive = () => {
       modelState.readonly = false
-      emit('deleteItem')
+      emit('delete-item')
     }
 
     return {
