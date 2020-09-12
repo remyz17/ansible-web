@@ -54,21 +54,20 @@ export default {
       type: String,
       required: true,
     },
-    initialVal: {
-      type: String,
+    data: {
+      type: Object,
       required: true,
     },
   },
   setup(props, { emit }) {
-    console.log(props)
     const api = new Api(props.model)
     let labelProp = ref(props.label)
     let modelProp = ref(props.model)
     let fetchedData = ref([])
     let searchActive = ref(false)
     let modelState = reactive({
-      value: props.initialVal,
-      readonly: false,
+      value: props.data.group ? props.data.group.name : '',
+      readonly: true,
     })
     let timeoutRef = null
 

@@ -60,7 +60,7 @@
               </div>
             </div>
 
-            <div v-if="hostData.group" class="field">
+            <div v-if="isEditing || hostData.group" class="field">
               <label class="label">Group</label>
               <div class="control" v-if="isEditing">
                 <!-- <input
@@ -71,7 +71,7 @@
                 <ReferenceField
                   label="Group"
                   model="group"
-                  :initialVal="hostData.group.name"
+                  :data="hostData"
                   @update-item="refUpdate"
                   @delete-item="refDelete"
                 />
@@ -211,7 +211,6 @@ export default {
     }
 
     const refUpdate = (data) => {
-      console.log('on update', data)
       hostData.value.group_id = data.id
       hostData.value.group = data
     }
@@ -228,8 +227,8 @@ export default {
     const saveEdit = async () => {
       console.log('tigger save')
       console.log(hostData.value, hostData.value.id)
-      let res = await hostApi.update(hostData.value.id, hostData.value)
-      console.log(res)
+      /* let res = await hostApi.update(hostData.value.id, hostData.value)
+      console.log(res) */
       isEditing.value = false
     }
 
