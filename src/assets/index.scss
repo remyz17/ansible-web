@@ -1,31 +1,72 @@
-$black:	hsl(0, 0%, 4%);
-$black-bis:	hsl(0, 0%, 7%);
-$black-ter:	hsl(0, 0%, 14%);
-$grey-darker:	hsl(0, 0%, 21%);
-$grey-dark:	hsl(0, 0%, 29%);
-$grey:	hsl(0, 0%, 48%);
-$grey-light:	hsl(0, 0%, 71%);
-$grey-lighter:	hsl(0, 0%, 86%);
-$grey-lightest:	hsl(0, 0%, 93%);
-$white-ter:	hsl(0, 0%, 96%);
-$white-bis:	hsl(0, 0%, 98%);
-$white:	hsl(0, 0%, 100%);
-$orange:	hsl(14, 100%, 53%);
-$yellow:	hsl(48, 100%, 67%);
-$green:	hsl(141, 53%, 53%);
-$turquoise:	hsl(171, 100%, 41%);
-$cyan:	hsl(204, 71%, 53%);
+$black: hsl(0, 0%, 4%);
+$black-bis: hsl(0, 0%, 7%);
+$black-ter: hsl(0, 0%, 14%);
+$grey-darker: hsl(0, 0%, 21%);
+$grey-dark: hsl(0, 0%, 29%);
+$grey: hsl(0, 0%, 48%);
+$grey-light: hsl(0, 0%, 71%);
+$grey-lighter: hsl(0, 0%, 86%);
+$grey-lightest: hsl(0, 0%, 93%);
+$white-ter: hsl(0, 0%, 96%);
+$white-bis: hsl(0, 0%, 98%);
+$white: hsl(0, 0%, 100%);
+$orange: hsl(14, 100%, 53%);
+$yellow: hsl(48, 100%, 67%);
+$green: hsl(141, 53%, 53%);
+$turquoise: hsl(171, 100%, 41%);
+$cyan: hsl(204, 71%, 53%);
 $blue: hsl(217, 71%, 53%);
 $purple: hsl(271, 100%, 71%);
 $red: hsl(348, 86%, 61%);
 
-$link: $turquoise;
+// scheme
+$scheme-main: $black;
+$scheme-main-bis: $black-bis;
+$scheme-main-ter: $black-ter;
+$background: $black-ter;
+
+// nav
 $navbar-padding-horizontal: 255px;
-$footer-background-color: $white;
-$footer-padding: 3rem 1.5rem;
 $navbar-dropdown-item-hover-color: $turquoise;
 
-@import "bulma/bulma.sass";
+// footer
+$footer-background-color: $black;
+$footer-padding: 3rem 1.5rem;
+
+// box
+$box-shadow: 0 -2px 10px rgba(0, 0, 0, 1);
+
+// border
+$border: $grey-darker;
+$border-hover: $grey-dark;
+
+// text
+$text: $grey-lightest;
+$text-light: $grey-lighter;
+$text-strong: $grey-lighter;
+
+// link
+$link: $turquoise;
+$link-hover: $grey-light;
+$link-active: $grey-light;
+$link-focus: $grey-light;
+$link-focus-border: $grey-light;
+
+// table
+$table-cell-border: none;
+
+// input
+$input-border-color: $grey-dark;
+$input-hover-border-color: $grey;
+
+
+// dropdown
+$dropdown-content-shadow: 0 -2px 10px rgba(0, 0, 0, 1);
+$dropdown-item-hover-color: $link;
+$dropdown-item-hover-background-color: $black-bis;
+$dropdown-divider-background-color: $grey-dark;
+
+@import 'bulma/bulma.sass';
 
 /* #app {
   display: flex;

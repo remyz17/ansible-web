@@ -38,12 +38,12 @@
 
 <style scoped>
 .router-link-exact-active {
-  background-color: #fafafa;
-  color: #00d1b2;
+  background-color: rgb(18, 18, 18);
+  color: rgb(0, 209, 178);
 }
 .navbar-dropdown .router-link-exact-active {
-  background-color: whitesmoke;
-  color: #00d1b2;
+  background-color: rgb(18, 18, 18);
+  color: rgb(0, 209, 178);
 }
 </style>
 
