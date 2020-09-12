@@ -3,13 +3,13 @@
 ## Installation
 
 ```
-yarn install
+pnpm install
 ```
 
 ## Developement
 
 ```
-yarn run dev
+pnpm run dev
 ```
 
 ## Build for ansible-server
@@ -17,5 +17,5 @@ yarn run dev
 note: check vite.config.js to change build output path
 
 ```
-yarn run build
+pnpm run build
 ```
