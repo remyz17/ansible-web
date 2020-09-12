@@ -56,39 +56,13 @@
 
             <div class="field">
               <label class="label">Group</label>
-              <div class="dropdown w100" :class="{ 'is-active': searchActive }">
-                <div class="dropdown-trigger w100">
-                  <input
-                    class="input is-small"
-                    type="text"
-                    placeholder="Group"
-                    v-model="modelState.parent"
-                    :readonly="modelState.parentRO"
-                    @input="searchGroup($event.target.value)"
-                    @dblclick="unsetParent"
-                  />
-                  <!-- @blur="onBlurGroup" this make the @click="setParent(group)" uncallable -->
-                </div>
-                <div class="dropdown-menu w100" id="dropdown-menu3" role="menu">
-                  <div class="dropdown-content">
-                    <a
-                      v-for="parent in searchResults"
-                      :key="parent.id"
-                      class="dropdown-item"
-                      @click="setParent(parent)"
-                    >
-                      {{ parent.name }}
-                    </a>
-                    <hr class="dropdown-divider" />
-                    <router-link
-                      to="/inventory/group/create"
-                      class="dropdown-item"
-                    >
-                      Create
-                    </router-link>
-                  </div>
-                </div>
-              </div>
+              <ReferenceField
+                label="Group"
+                model="group"
+                :data="modelState"
+                @update-item="refUpdate"
+                @delete-item="refDelete"
+              />
             </div>
           </div>
         </div>
@@ -103,66 +77,7 @@
         </div>
         <div class="columns">
           <div class="column is-half is-mobile">
-            <div class="field is-horizontal">
-              <div class="field-body">
-                <div class="field">
-                  <input
-                    class="input is-small"
-                    type="text"
-                    placeholder="Key"
-                    v-model="modelState.keyVar"
-                  />
-                </div>
-                <div class="field has-addons">
-                  <p class="control">
-                    <input
-                      class="input is-small"
-                      type="text"
-                      placeholder="Value"
-                      v-model="modelState.valueVar"
-                    />
-                  </p>
-                  <p class="control">
-                    <a class="button is-small" @click="addGroupVar"> Add </a>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div
-              v-show="modelState.groupVars.length > 0"
-              v-for="(param, index) in modelState.groupVars"
-              :key="param.key"
-              class="field is-horizontal"
-            >
-              <div class="field-body">
-                <div class="field">
-                  <input
-                    class="input is-small"
-                    type="text"
-                    :value="param.key"
-                    readonly
-                  />
-                </div>
-                <div class="field has-addons">
-                  <p class="control">
-                    <input
-                      class="input is-small"
-                      type="text"
-                      :value="param.value"
-                      readonly
-                    />
-                  </p>
-                  <p class="control">
-                    <a
-                      class="button is-danger is-small"
-                      @click="deleteGroupVar(index)"
-                    >
-                      delete
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </div>
+            <VarsField :data="modelState" :isEditing="true" />
           </div>
         </div>
       </div>
@@ -181,60 +96,26 @@ import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import hostApi from '/@/servcies/inventory/host.js'
 import groupApi from '/@/servcies/inventory/group.js'
+import ReferenceField from '../composable/ReferenceField.vue'
+import VarsField from '../composable/VarsField.vue'
 
 export default {
   name: 'HostCreate',
+  components: {
+    ReferenceField,
+    VarsField,
+  },
   setup() {
     let router = useRouter()
     let modelState = reactive({
       name: '',
-      nameErr: '',
+      nameErr: false,
       parent: '',
-      parentId: '',
+      parent_id: '',
       parentRO: false,
-      groupVars: [],
-      keyVar: '',
-      valueVar: '',
+      variables: [],
     })
-    let groupsData = ref([])
-    let searchActive = ref(false)
     let createLoding = ref(false)
-    let timeoutRef = null
-
-    const searchResults = computed(() => groupsData.value)
-
-    const searchGroup = (query) => {
-      if (query == '') {
-        searchActive.value = false
-        return
-      }
-      if (timeoutRef !== null) clearTimeout(timeoutRef)
-      timeoutRef = setTimeout(async () => {
-        groupsData.value = await groupApi.search(query)
-        searchActive.value = true
-      }, 200)
-    }
-
-    const setParent = (group) => {
-      modelState.parent = group.name
-      modelState.parentId = group.id
-      modelState.parentRO = true
-      searchActive.value = false
-    }
-
-    const unsetParent = () => {
-      modelState.parentId = ''
-      modelState.parentRO = false
-    }
-
-    const addGroupVar = () => {
-      modelState.groupVars.push({
-        key: modelState.keyVar,
-        value: modelState.valueVar,
-      })
-    }
-
-    const deleteGroupVar = (index) => modelState.groupVars.splice(index, 1)
 
     const createHost = async () => {
       if (modelState.name == '') {
@@ -245,24 +126,29 @@ export default {
       createLoding.value = true
       let newGroup = await groupApi.create({
         name: modelState.name,
-        ...(modelState.parentId && { parent_id: modelState.parentId }),
-        ...(modelState.groupVars.length && { groupvars: modelState.groupVars }),
+        ...(modelState.parent_id && { parent_id: modelState.parent_id }),
+        ...(modelState.variables.length && { variables: modelState.variables }),
       })
       createLoding.value = false
       router.push({ name: 'Group', params: { id: newGroup.id } })
     }
 
+    const refUpdate = (group) => {
+      modelState.parent = group.name
+      modelState.parent_id = group.id
+    }
+
+    const refDelete = () => {
+      modelState.parent_id = null
+      modelState.parent = null
+    }
+
     return {
       modelState,
-      searchResults,
-      searchGroup,
-      searchActive,
-      setParent,
-      unsetParent,
-      addGroupVar,
-      deleteGroupVar,
       createHost,
       createLoding,
+      refUpdate,
+      refDelete,
     }
   },
 }

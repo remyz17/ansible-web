@@ -53,20 +53,22 @@
                 <input
                   class="input is-small"
                   type="text"
-                  :value="groupData.name"
+                  v-model="groupData.name"
                 />
               </div>
               <div class="control" v-else="">
                 <p>{{ groupData.name }}</p>
               </div>
             </div>
-            <div v-if="groupData.parent" class="field">
+            <div v-if="isEditing || groupData.parent" class="field">
               <label class="label">Parent group</label>
               <div class="control" v-if="isEditing">
-                <input
-                  class="input is-small"
-                  type="text"
-                  :value="groupData.parent.name"
+                <ReferenceField
+                  label="Parent"
+                  model="group"
+                  :data="groupData"
+                  @update-item="refUpdate"
+                  @delete-item="refDelete"
                 />
               </div>
               <div class="control" v-else="">
@@ -91,35 +93,7 @@
         </div>
         <div class="columns">
           <div class="column is-half is-mobile">
-            <div
-              v-if="groupData.groupvars && groupData.groupvars.length > 0"
-              v-for="(_var, index) in groupData.groupvars"
-              :key="index"
-              class="field is-horizontal"
-            >
-              <div class="field-body">
-                <div class="field">
-                  <input
-                    class="input is-small"
-                    :class="{ 'is-static': !isEditing }"
-                    type="text"
-                    :value="_var.key"
-                    :readonly="!isEditing"
-                  />
-                </div>
-                <div class="field has-addons">
-                  <p class="control">
-                    <input
-                      class="input is-small"
-                      :class="{ 'is-static': !isEditing }"
-                      type="text"
-                      :value="_var.value"
-                      :readonly="!isEditing"
-                    />
-                  </p>
-                </div>
-              </div>
-            </div>
+            <VarsField :data="groupData" :isEditing="isEditing" />
           </div>
         </div>
       </div>
@@ -131,9 +105,15 @@
 import { watchEffect, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import groupApi from '/@/servcies/inventory/group.js'
+import ReferenceField from '../composable/ReferenceField.vue'
+import VarsField from '../composable/VarsField.vue'
 
 export default {
   name: 'Group',
+  components: {
+    ReferenceField,
+    VarsField,
+  },
   setup() {
     let router = useRouter()
     let route = useRoute()
@@ -141,9 +121,7 @@ export default {
     let deletePending = ref(false)
     let isEditing = ref(false)
 
-    const fetchGroup = async (id) => {
-      groupData.value = await groupApi.get(id)
-    }
+    const fetchGroup = async (id) => (groupData.value = await groupApi.get(id))
 
     watchEffect(async () => await fetchGroup(route.params.id))
 
@@ -155,7 +133,29 @@ export default {
     }
 
     const handleEdit = () => (isEditing.value = !isEditing.value)
-    const saveEdit = () => ''
+
+    const refUpdate = (data) => {
+      groupData.value.parent_id = data.id
+      groupData.value.parent = data
+    }
+
+    const refDelete = () => {
+      groupData.value.parent_id = null
+      groupData.value.parent = null
+    }
+
+    const saveEdit = async () => {
+      let res = await groupApi.update(groupData.value.id, {
+        name: groupData.value.name,
+        ...(groupData.value.parent_id && {
+          parent_id: groupData.value.parent_id,
+        }),
+        ...(groupData.value.variables && {
+          variables: groupData.value.variables,
+        }),
+      })
+      isEditing.value = false
+    }
 
     return {
       groupData,
@@ -164,6 +164,8 @@ export default {
       isEditing,
       handleEdit,
       saveEdit,
+      refUpdate,
+      refDelete,
     }
   },
 }
