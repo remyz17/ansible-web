@@ -110,8 +110,8 @@ export default {
     let modelState = reactive({
       name: '',
       nameErr: false,
-      parent: '',
-      parent_id: '',
+      group: '',
+      group_id: '',
       variables: [],
     })
     let createLoding = ref(false)
@@ -125,7 +125,7 @@ export default {
       createLoding.value = true
       let newGroup = await groupApi.create({
         name: modelState.name,
-        ...(modelState.parent_id && { parent_id: modelState.parent_id }),
+        ...(modelState.group_id && { group_id: modelState.group_id }),
         ...(modelState.variables.length && { variables: modelState.variables }),
       })
       createLoding.value = false
@@ -133,13 +133,13 @@ export default {
     }
 
     const refUpdate = (group) => {
-      modelState.parent = group.name
-      modelState.parent_id = group.id
+      modelState.group = group.name
+      modelState.group_id = group.id
     }
 
     const refDelete = () => {
-      modelState.parent_id = null
-      modelState.parent = null
+      modelState.group_id = null
+      modelState.group = null
     }
 
     return {

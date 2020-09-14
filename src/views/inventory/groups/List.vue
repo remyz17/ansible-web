@@ -66,10 +66,10 @@
                 >
                   <td>{{ group.id }}</td>
                   <td>{{ group.name }}</td>
-                  <td @click.stop v-if="group.parent_id">
+                  <td @click.stop v-if="group.group_id">
                     <router-link
-                      :to="{ name: 'Group', params: { id: group.parent_id } }"
-                      >{{ group.parent.name }}</router-link
+                      :to="{ name: 'Group', params: { id: group.group_id } }"
+                      >{{ group.group.name }}</router-link
                     >
                   </td>
                   <td v-else=""></td>

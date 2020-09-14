@@ -60,7 +60,7 @@
                 <p>{{ groupData.name }}</p>
               </div>
             </div>
-            <div v-if="isEditing || groupData.parent" class="field">
+            <div v-if="isEditing || groupData.group" class="field">
               <label class="label">Parent group</label>
               <div class="control" v-if="isEditing">
                 <ReferenceField
@@ -73,8 +73,8 @@
               </div>
               <div class="control" v-else="">
                 <router-link
-                  :to="{ name: 'Group', params: { id: groupData.parent_id } }"
-                  >{{ groupData.parent.name }}</router-link
+                  :to="{ name: 'Group', params: { id: groupData.group_id } }"
+                  >{{ groupData.group.name }}</router-link
                 >
               </div>
             </div>
@@ -135,20 +135,20 @@ export default {
     const handleEdit = () => (isEditing.value = !isEditing.value)
 
     const refUpdate = (data) => {
-      groupData.value.parent_id = data.id
-      groupData.value.parent = data
+      groupData.value.group_id = data.id
+      groupData.value.group = data
     }
 
     const refDelete = () => {
-      groupData.value.parent_id = null
-      groupData.value.parent = null
+      groupData.value.group_id = null
+      groupData.value.group = null
     }
 
     const saveEdit = async () => {
       let res = await groupApi.update(groupData.value.id, {
         name: groupData.value.name,
-        ...(groupData.value.parent_id && {
-          parent_id: groupData.value.parent_id,
+        ...(groupData.value.group_id && {
+          group_id: groupData.value.group_id,
         }),
         ...(groupData.value.variables && {
           variables: groupData.value.variables,
