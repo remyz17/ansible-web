@@ -112,7 +112,6 @@ export default {
       nameErr: false,
       parent: '',
       parent_id: '',
-      parentRO: false,
       variables: [],
     })
     let createLoding = ref(false)

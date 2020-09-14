@@ -112,7 +112,6 @@ export default {
       hostnameErr: false,
       group: '',
       group_id: '',
-      groupRO: false,
       variables: [],
     })
     let createLoding = ref(false)
@@ -126,7 +125,7 @@ export default {
       createLoding.value = true
       let newHost = await hostApi.create({
         hostname: modelState.hostname,
-        ...(modelState.groupId && { group_id: modelState.groupId }),
+        ...(modelState.group_id && { group_id: modelState.group_id }),
         ...(modelState.variables.length && { variables: modelState.variables }),
       })
       createLoding.value = false

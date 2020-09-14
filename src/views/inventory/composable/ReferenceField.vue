@@ -66,8 +66,10 @@ export default {
     let fetchedData = ref([])
     let searchActive = ref(false)
     let modelState = reactive({
-      value: props.data.group ? props.data.group.name : '',
-      readonly: true,
+      value: props.data.group
+        ? `${props.data.group.name} <${props.data.group.id}>`
+        : '',
+      readonly: props.data.group ? true : false,
     })
     let timeoutRef = null
 
@@ -86,7 +88,7 @@ export default {
     }
 
     const setActive = (item) => {
-      modelState.value = item.name
+      modelState.value = `${item.name} <${item.id}>`
       modelState.readonly = true
       searchActive.value = false
       emit('update-item', item)
@@ -94,6 +96,7 @@ export default {
 
     const unsetActive = () => {
       modelState.readonly = false
+      modelState.value = ''
       emit('delete-item')
     }
 
